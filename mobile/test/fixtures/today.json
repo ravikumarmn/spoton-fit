@@ -1,5 +1,5 @@
 {
-  "day": "2026-11-19",
+  "day": "2026-11-20",
   "eaten": {
     "kcal": 1230.0,
     "protein_g": 81.6,
@@ -34,6 +34,6 @@
   "water_ml": 500,
   "steps": 3900,
   "workout_min": 30.0,
-  "burned_kcal_est": 984.0,
+  "burned_kcal_est": 659.0,
   "nudges": []
 }

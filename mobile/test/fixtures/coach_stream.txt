@@ -38,5 +38,5 @@ event: token
 data: {"text": "today."}
 
 event: done
-data: {"reply": "Yes, have tea. You have room today.", "thread_id": "2026-11-19", "safety": null}
+data: {"reply": "Yes, have tea. You have room today.", "thread_id": "2026-11-20", "safety": null}
 

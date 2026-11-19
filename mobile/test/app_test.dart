@@ -73,12 +73,18 @@ class Harness {
     }
   }
 
-  /// The list to scroll: the open bottom sheet's, else the page's.
+  /// The list to scroll: the open bottom sheet's, else the page's. Only vertical lists: the
+  /// first Scrollable can be a sideways chip row, which never reveals rows below the fold.
   Finder get _scrollable {
+    final vertical = find.byWidgetPredicate(
+      (w) =>
+          w is Scrollable &&
+          axisDirectionToAxis(w.axisDirection) == Axis.vertical,
+    );
     final sheet = find.byType(BottomSheet);
     return sheet.evaluate().isNotEmpty
-        ? find.descendant(of: sheet, matching: find.byType(Scrollable)).first
-        : find.byType(Scrollable).first;
+        ? find.descendant(of: sheet, matching: vertical).first
+        : vertical.first;
   }
 
   Future<void> tap(Finder base) async {

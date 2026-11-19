@@ -168,6 +168,11 @@
         "day": "2026-11-19",
         "kg": 92.0,
         "trend_kg": 92.0
+      },
+      {
+        "day": "2026-11-20",
+        "kg": 92.0,
+        "trend_kg": 92.0
       }
     ]
   },
@@ -197,8 +202,8 @@
   },
   "prediction": {
     "on_track": true,
-    "earliest": "2027-02-25",
-    "latest": "2027-06-23",
+    "earliest": "2027-02-26",
+    "latest": "2027-06-24",
     "message": "85 kg likely between late-Feb 2027 and late-Jun 2027. A range, not a promise.",
     "goal_kg": 85.0
   },
@@ -209,7 +214,7 @@
   },
   "measurements": [
     {
-      "day": "2026-11-19",
+      "day": "2026-11-20",
       "waist_cm": 98.5,
       "hip_cm": null,
       "body_fat_pct": 24.0

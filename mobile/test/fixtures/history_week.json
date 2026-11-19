@@ -1,8 +1,8 @@
 {
   "period": "week",
   "start": "2026-10-18",
-  "end": "2026-11-19",
-  "days_logged": 33,
+  "end": "2026-11-20",
+  "days_logged": 34,
   "rows": [
     {
       "week": "2026-10-24",
@@ -50,13 +50,13 @@
     },
     {
       "week": "2026-11-21",
-      "kcal": 1902.0,
-      "protein": 136.0,
-      "carbs": 168.0,
+      "kcal": 1930.0,
+      "protein": 139.0,
+      "carbs": 173.0,
       "fat": 63.0,
-      "water_ml": 100.0,
-      "steps": 5580.0,
-      "days_logged": 5,
+      "water_ml": 83.0,
+      "steps": 5650.0,
+      "days_logged": 6,
       "avg_weight_kg": 92.0
     }
   ],
@@ -191,6 +191,10 @@
     },
     {
       "day": "2026-11-19",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-20",
       "trend_kg": 92.0
     }
   ]

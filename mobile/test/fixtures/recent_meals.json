@@ -1,14 +1,14 @@
 [
   {
-    "id": "d7748ce9-53d7-4f33-9ef1-bcf5c434c22b",
-    "eaten_at": "2026-11-19T01:59:24.398995Z",
+    "id": "017f9bbc-7c57-40f7-91c3-19dfad953591",
+    "eaten_at": "2026-11-19T21:50:48.822817Z",
     "slot": "snack",
     "note": null,
     "source": "text",
     "is_favourite": false,
     "items": [
       {
-        "id": "38a17841-bb71-4be6-9488-c5f15297def1",
+        "id": "70c9166c-75ff-4b52-95a2-bfe760eb4c81",
         "name": "boiled egg",
         "quantity": 6.0,
         "unit": "piece",
@@ -39,15 +39,15 @@
     }
   },
   {
-    "id": "61192fbf-3e54-47fc-abc4-f0a27267a381",
-    "eaten_at": "2026-11-19T01:59:24.285170Z",
+    "id": "52c6fcce-3dd1-4eba-bd26-1f1180e6d42d",
+    "eaten_at": "2026-11-19T21:50:48.787360Z",
     "slot": "breakfast",
     "note": null,
     "source": "text",
     "is_favourite": true,
     "items": [
       {
-        "id": "28956069-8c25-401d-8cec-870b88a37877",
+        "id": "f35f96d0-11cb-49b1-bd61-af1a0a961813",
         "name": "boiled egg",
         "quantity": 6.0,
         "unit": "piece",
@@ -69,7 +69,7 @@
         }
       },
       {
-        "id": "fdf48712-c1c8-43f7-992b-d7bb560824b8",
+        "id": "7c448df3-0d4f-440e-912e-8a09a9502fdd",
         "name": "puri",
         "quantity": 3.0,
         "unit": "piece",
@@ -100,7 +100,46 @@
     }
   },
   {
-    "id": "036c5c49-e31d-43b1-8346-03b82de22a2b",
+    "id": "6eadce18-9d1b-482c-81ae-587b52bc9bc6",
+    "eaten_at": "2026-11-19T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "44da7d37-4414-41cc-9896-e675e29ee76e",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "d6c2fb94-fb52-4a8b-80d5-f3d3dec0948a",
     "eaten_at": "2026-11-18T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -108,7 +147,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "2814153a-ce41-4622-89c8-246d6bdec02c",
+        "id": "190bda24-b74a-461e-8e45-9c8178c0a4f7",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -139,7 +178,7 @@
     }
   },
   {
-    "id": "37182402-3f12-4d95-bb6a-e273004bbb32",
+    "id": "10b1839b-e8dd-4759-a721-dbc4d11ed917",
     "eaten_at": "2026-11-17T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -147,7 +186,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "80414813-4d92-4544-ad69-d3b007791fe7",
+        "id": "d467be7b-9364-4716-829b-8c835f9f4f97",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -178,7 +217,7 @@
     }
   },
   {
-    "id": "6b4ea469-6b11-4fbe-a1f9-fd6edbe5726f",
+    "id": "d454d711-3111-4a23-afab-37b7b9810f70",
     "eaten_at": "2026-11-16T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -186,7 +225,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "fbcb3665-1633-49e5-b97d-70dd6696b36a",
+        "id": "58f6ab53-463d-4714-a643-49f8b8347bbe",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -217,7 +256,7 @@
     }
   },
   {
-    "id": "0397c3f9-0e44-4961-84b7-3479b36dcf09",
+    "id": "a9b56831-db00-45da-8080-6d5ce09e3fe0",
     "eaten_at": "2026-11-15T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -225,7 +264,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "4d1d5897-d0e8-4cf6-8e12-006a89f3d074",
+        "id": "691cbdad-4d13-4630-832e-02ad89d67119",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -256,7 +295,7 @@
     }
   },
   {
-    "id": "ff6b77c3-e7b2-4014-bce7-954584aea06a",
+    "id": "36f4a5e0-5de6-45c8-aefd-87313103abff",
     "eaten_at": "2026-11-14T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -264,7 +303,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "f0e9ee24-287b-49bc-a6e0-4ec7aaa10182",
+        "id": "7d6f9384-f6d4-4f65-b0c0-6eecb8a763c0",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -295,7 +334,7 @@
     }
   },
   {
-    "id": "d736aed0-290c-4827-9ef8-6ae36153bc2d",
+    "id": "1280b75f-06ca-4e8a-a5b8-39e755841cf7",
     "eaten_at": "2026-11-13T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -303,7 +342,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "4287e573-a484-4561-baa6-cab0003e3b04",
+        "id": "bf6e9d67-3c09-474c-8750-9c484d336317",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -334,7 +373,7 @@
     }
   },
   {
-    "id": "2859675b-9cc2-46bc-aee9-bee54a5bcbf5",
+    "id": "145b9fbe-fa73-49bd-9571-3030e67b45fe",
     "eaten_at": "2026-11-12T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -342,46 +381,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "02e39efe-421c-44c6-b2d3-1bf31c2aad9f",
-        "name": "home meals",
-        "quantity": 1.0,
-        "unit": "serving",
-        "grams": null,
-        "kcal": 2070.0,
-        "protein": 150.0,
-        "carbs": 200.0,
-        "fat": 60.0,
-        "fibre": 0.0,
-        "oil_level": "none",
-        "remark": null,
-        "source": "ai_estimate",
-        "per_unit": {
-          "kcal": 2070.0,
-          "protein": 150.0,
-          "carbs": 200.0,
-          "fat": 60.0,
-          "fibre": 0.0
-        }
-      }
-    ],
-    "totals": {
-      "kcal": 2070.0,
-      "protein": 150.0,
-      "carbs": 200.0,
-      "fat": 60.0,
-      "fibre": 0.0
-    }
-  },
-  {
-    "id": "10a4e405-6752-49bb-84f3-795b33697ec3",
-    "eaten_at": "2026-11-11T07:30:00Z",
-    "slot": "lunch",
-    "note": null,
-    "source": "text",
-    "is_favourite": false,
-    "items": [
-      {
-        "id": "940816ac-38c6-4c21-944d-b90ff8ca5a3a",
+        "id": "d5ab4ffd-48bc-4ccd-8545-6c00a4b05d74",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",

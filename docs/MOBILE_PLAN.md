@@ -89,3 +89,11 @@ An end-to-end test drives the real client against a real server with real Gemini
 - Coach and Review screens overflowed at 150–200% text size; the Review's pinned panel is now only the total and the Save button.
 - After saving the profile, the confirmation was off-screen at the top of a long form; it now scrolls into view and shows a toast.
 - The coach's Markdown (`**bold**`) showed as asterisks; a small renderer now formats bold, italics and lists.
+
+### Known test gap (20 Nov 2026)
+
+The widget test "editing a saved meal saves changes to that meal" fails when the test machine's time zone is
+not the server's (e.g. UTC at 03:00 IST, when the server's "today" is a day ahead). CI runs the mobile job in
+`Asia/Kolkata`. The other two tests that failed under UTC were fixed (the test helper scrolled a sideways chip
+row instead of the page). The app behaviour behind it: a phone whose date differs from the server's shows the
+date ("Fri, 20 Nov") instead of "Today".
