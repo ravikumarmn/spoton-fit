@@ -2,9 +2,11 @@
 
     .venv/bin/python scripts/make_app_icon.py
 
-Writes mobile/assets/icon/{icon,foreground,monochrome}.png (1024 px). The ring echoes the
+Writes mobile/assets/icon/{icon,foreground,monochrome}.png (1024 px) and the launch-screen
+images splash_logo.png and splash_android12.png. The ring echoes the
 calorie ring on the Today screen; the dot is the "spot" in SpotOn. Then run
-`dart run flutter_launcher_icons` in mobile/ to generate the Android and iOS sizes.
+`dart run flutter_launcher_icons` and `dart run flutter_native_splash:create` in mobile/
+to generate the Android and iOS sizes. The in-app logo (AppMark) draws the same shape.
 """
 
 from pathlib import Path
@@ -47,6 +49,10 @@ def save(img: Image.Image, name: str) -> None:
     img.resize((1024, 1024), Image.LANCZOS).save(OUT / name)
 
 
+def save_size(img: Image.Image, name: str, px: int) -> None:
+    img.resize((px, px), Image.LANCZOS).save(OUT / name)
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     full = Image.new("RGBA", (N, N), SAGE)
@@ -56,6 +62,14 @@ def main() -> None:
     # launchers show a shape inside the 66% safe zone. 0.68 * (1 - 2 * 0.16) = a ring of 46%.
     save(mark(0.68), "foreground.png")
     save(mark(0.68, track=False), "monochrome.png")  # Android 13 themed icons tint this
+    # Launch screen (Android < 12 and iOS): the icon as a rounded square, 72 dp at 4x.
+    tile = Image.new("RGBA", (N, N), (0, 0, 0, 0))
+    ImageDraw.Draw(tile).rounded_rectangle((0, 0, N - 1, N - 1), radius=round(N * 0.28), fill=SAGE)
+    tile.alpha_composite(mark(0.62))
+    tile.resize((288, 288), Image.LANCZOS).save(OUT / "splash_logo.png")
+    # Android 12+ launch screen: the system draws the sage circle (icon_background_color);
+    # the image is 1152 px and must fit a 768 px circle.
+    save_size(mark(0.42), "splash_android12.png", 1152)
     print(f"wrote icons to {OUT}")
 
 

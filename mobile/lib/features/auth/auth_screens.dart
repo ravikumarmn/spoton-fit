@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -21,13 +23,49 @@ class AppMark extends StatelessWidget {
         color: AppColors.primary,
         borderRadius: BorderRadius.circular(size * 0.28),
       ),
-      child: Icon(
-        Icons.restaurant_menu,
-        color: AppColors.onPrimary,
-        size: size * 0.5,
-      ),
+      child: const CustomPaint(painter: _RingMarkPainter()),
     ),
   );
+}
+
+/// The SpotOn mark, the same shape as the app icon (scripts/make_app_icon.py): a ring that is
+/// about 80% complete, like the calorie ring on Today, with a dot in the centre.
+class _RingMarkPainter extends CustomPainter {
+  const _RingMarkPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final ring = size.shortestSide * 0.62;
+    final stroke = ring * 0.17;
+    final centre = size.center(Offset.zero);
+    final rect = Rect.fromCircle(center: centre, radius: (ring - stroke) / 2);
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawCircle(
+      centre,
+      (ring - stroke) / 2,
+      paint..color = AppColors.onPrimary.withValues(alpha: 0.31),
+    );
+    const start = -math.pi / 2; // 12 o'clock
+    const sweep = 290 * math.pi / 180;
+    canvas.drawArc(
+      rect,
+      start,
+      sweep,
+      false,
+      paint..color = AppColors.onPrimary,
+    );
+    canvas.drawCircle(
+      centre,
+      ring * 0.12,
+      Paint()..color = AppColors.onPrimary,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Shown while the stored session is checked, or when the server can't be reached.
