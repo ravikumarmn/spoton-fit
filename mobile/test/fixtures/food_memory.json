@@ -1,0 +1,14 @@
+[
+  {
+    "id": "40db5da7-4091-4408-8348-898dfca8a5fc",
+    "name": "boiled egg",
+    "unit": "piece",
+    "grams_per_unit": 50.0,
+    "kcal": 78.0,
+    "protein": 6.3,
+    "carbs": 0.4,
+    "fat": 4.8,
+    "fibre": 0.0,
+    "times_used": 1
+  }
+]

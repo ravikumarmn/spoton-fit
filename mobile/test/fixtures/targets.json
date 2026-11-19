@@ -1,0 +1,16 @@
+{
+  "bmi": 29.1,
+  "bmr": 1880.0,
+  "maintenance": 2585.0,
+  "kcal": 2070,
+  "kcal_floor": 1880,
+  "protein_g": 144,
+  "fat_g": 62,
+  "carbs_g": 233,
+  "fibre_g": 29,
+  "water_ml": 3200,
+  "steps": 7500,
+  "kcal_adjustment": 0,
+  "steps_adjustment": 0,
+  "maintenance_source": "formula"
+}

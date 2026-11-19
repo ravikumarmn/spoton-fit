@@ -1,0 +1,13 @@
+{
+  "thread_id": "2026-11-19",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can I have tea now?"
+    },
+    {
+      "role": "assistant",
+      "content": "Yes, have tea. You have room today."
+    }
+  ]
+}

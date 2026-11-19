@@ -1,0 +1,14 @@
+[
+  {
+    "activity": "cycling",
+    "minutes": 15.0,
+    "met": 7.0,
+    "kcal": 161.0
+  },
+  {
+    "activity": "treadmill walk",
+    "minutes": 15.0,
+    "met": 4.5,
+    "kcal": 104.0
+  }
+]

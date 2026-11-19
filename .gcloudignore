@@ -1,0 +1,4 @@
+# Manual `gcloud builds submit` uploads (CI uses .dockerignore). Keep in line with it.
+.git
+.gitignore
+#!include:.dockerignore

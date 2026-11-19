@@ -1,0 +1,151 @@
+name: Deploy
+
+# After CI passes on main: build image -> push to Artifact Registry -> migrate (Neon) ->
+# Cloud Run -> smoke test /readyz -> build the signed Android APK that points at the new
+# server and attach it to a GitHub Release. A failing CI run never deploys.
+#
+# Off until the repository variable DEPLOY_ENABLED=true. One-time setup is in README "Deploy":
+#   variables: DEPLOY_ENABLED, GCP_PROJECT_ID, GCP_REGION, GCP_AR_REPO, CLOUD_RUN_SERVICE,
+#              RUNTIME_SERVICE_ACCOUNT
+#   secrets:   GCP_WIF_PROVIDER, GCP_SERVICE_ACCOUNT (Workload Identity Federation, no keys),
+#              ANDROID_KEYSTORE_B64, ANDROID_KEYSTORE_PASSWORD (release signing key)
+#   Secret Manager (read at runtime by Cloud Run, never stored in GitHub):
+#              spotonfit-jwt-secret, spotonfit-google-api-key, spotonfit-database-url
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write  # Workload Identity Federation (no long-lived keys)
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      vars.DEPLOY_ENABLED == 'true' &&
+      (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.run.outputs.url }}
+    env:
+      IMAGE: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_AR_REPO }}/spotonfit-api:${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Build and push image (tagged with the git SHA)
+        run: |
+          gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+      - name: Run database migrations (direct Neon connection from Secret Manager)
+        run: |
+          DATABASE_URL="$(gcloud secrets versions access latest --secret=spotonfit-database-url --project='${{ vars.GCP_PROJECT_ID }}')"
+          echo "::add-mask::$DATABASE_URL"
+          docker run --rm -e DATABASE_URL="$DATABASE_URL" "$IMAGE" python -m spotonfit.migrations
+      - name: Deploy to Cloud Run
+        id: run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ vars.CLOUD_RUN_SERVICE }}
+          region: ${{ vars.GCP_REGION }}
+          image: ${{ env.IMAGE }}
+          # Public API (the app signs users in itself). Scales to zero when idle; at most 2
+          # instances keeps Neon connections well inside the free plan.
+          flags: >-
+            --service-account=${{ vars.RUNTIME_SERVICE_ACCOUNT }}
+            --allow-unauthenticated
+            --min-instances=0
+            --max-instances=2
+            --memory=1Gi
+            --cpu-boost
+            --timeout=300
+          env_vars: |
+            ENVIRONMENT=prod
+            AUTO_MIGRATE=false
+          secrets: |
+            JWT_SECRET=spotonfit-jwt-secret:latest
+            GOOGLE_API_KEY=spotonfit-google-api-key:latest
+            DATABASE_URL=spotonfit-database-url:latest
+      - name: Deploy the weekly review job (Cloud Run Job)
+        run: |
+          gcloud run jobs deploy spotonfit-weekly --region "${{ vars.GCP_REGION }}" --image "$IMAGE" \
+            --service-account "${{ vars.RUNTIME_SERVICE_ACCOUNT }}" \
+            --command python --args="-m,spotonfit.jobs.weekly" \
+            --set-env-vars ENVIRONMENT=prod,AUTO_MIGRATE=false \
+            --set-secrets DATABASE_URL=spotonfit-database-url:latest,JWT_SECRET=spotonfit-jwt-secret:latest
+      - name: Smoke test
+        run: |
+          for i in $(seq 1 20); do curl -fs "${{ steps.run.outputs.url }}/readyz" && exit 0; sleep 3; done
+          exit 1
+
+  android:
+    # The app build that testers install. It talks to the server deployed above.
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # create the GitHub Release
+    env:
+      SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SHA }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.50.0"
+          channel: stable
+          cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Build the signed release APK
+        working-directory: mobile
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          SPOTON_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          SPOTON_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          SPOTON_KEY_ALIAS: spoton
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/spoton.jks"
+          export SPOTON_KEYSTORE="$RUNNER_TEMP/spoton.jks"
+          flutter pub get
+          flutter build apk --release \
+            --dart-define=SPOTON_API_URL='${{ needs.deploy.outputs.url }}' \
+            --build-name=1.0.${{ github.run_number }} --build-number=${{ github.run_number }}
+          cp build/app/outputs/flutter-apk/app-release.apk "$RUNNER_TEMP/SpotOn-1.0.${{ github.run_number }}.apk"
+          rm -f "$RUNNER_TEMP/spoton.jks"
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Publish to the public download link (always the newest build)
+        run: |
+          gcloud storage cp "$RUNNER_TEMP/SpotOn-1.0.${{ github.run_number }}.apk" \
+            "gs://${{ vars.GCP_PROJECT_ID }}-downloads/SpotOn.apk" \
+            --cache-control="no-cache, max-age=0" \
+            --content-type=application/vnd.android.package-archive
+          echo "Download: https://storage.googleapis.com/${{ vars.GCP_PROJECT_ID }}-downloads/SpotOn.apk" >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish as a GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="app-v1.0.${{ github.run_number }}"
+          gh release create "$TAG" "$RUNNER_TEMP/SpotOn-1.0.${{ github.run_number }}.apk" \
+            --target "$SHA" --title "SpotOn 1.0.${{ github.run_number }}" --latest \
+            --notes "Android build for commit ${SHA::7}. Server: ${{ needs.deploy.outputs.url }}. Install over the previous version; your data stays on the server."

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "boiled egg",
+    "effort": "5_min",
+    "slots": [
+      "breakfast"
+    ],
+    "available": true,
+    "id": "1f5a90d3-e0ac-43e0-a2bc-62cf9215755a"
+  }
+]

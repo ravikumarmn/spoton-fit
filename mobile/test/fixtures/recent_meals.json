@@ -1,0 +1,414 @@
+[
+  {
+    "id": "d7748ce9-53d7-4f33-9ef1-bcf5c434c22b",
+    "eaten_at": "2026-11-19T01:59:24.398995Z",
+    "slot": "snack",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "38a17841-bb71-4be6-9488-c5f15297def1",
+        "name": "boiled egg",
+        "quantity": 6.0,
+        "unit": "piece",
+        "grams": 300.0,
+        "kcal": 468.0,
+        "protein": 37.8,
+        "carbs": 2.4,
+        "fat": 28.8,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "edited",
+        "per_unit": {
+          "kcal": 78.0,
+          "protein": 6.3,
+          "carbs": 0.4,
+          "fat": 4.8,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 468.0,
+      "protein": 37.8,
+      "carbs": 2.4,
+      "fat": 28.8,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "61192fbf-3e54-47fc-abc4-f0a27267a381",
+    "eaten_at": "2026-11-19T01:59:24.285170Z",
+    "slot": "breakfast",
+    "note": null,
+    "source": "text",
+    "is_favourite": true,
+    "items": [
+      {
+        "id": "28956069-8c25-401d-8cec-870b88a37877",
+        "name": "boiled egg",
+        "quantity": 6.0,
+        "unit": "piece",
+        "grams": 300.0,
+        "kcal": 432.0,
+        "protein": 37.8,
+        "carbs": 2.4,
+        "fat": 28.8,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 72.0,
+          "protein": 6.3,
+          "carbs": 0.4,
+          "fat": 4.8,
+          "fibre": 0.0
+        }
+      },
+      {
+        "id": "fdf48712-c1c8-43f7-992b-d7bb560824b8",
+        "name": "puri",
+        "quantity": 3.0,
+        "unit": "piece",
+        "grams": 90.0,
+        "kcal": 330.0,
+        "protein": 6.0,
+        "carbs": 36.0,
+        "fat": 18.0,
+        "fibre": 1.5,
+        "oil_level": "heavy",
+        "remark": "deep-fried, very oily",
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 110.0,
+          "protein": 2.0,
+          "carbs": 12.0,
+          "fat": 6.0,
+          "fibre": 0.5
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 762.0,
+      "protein": 43.8,
+      "carbs": 38.4,
+      "fat": 46.8,
+      "fibre": 1.5
+    }
+  },
+  {
+    "id": "036c5c49-e31d-43b1-8346-03b82de22a2b",
+    "eaten_at": "2026-11-18T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "2814153a-ce41-4622-89c8-246d6bdec02c",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "37182402-3f12-4d95-bb6a-e273004bbb32",
+    "eaten_at": "2026-11-17T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "80414813-4d92-4544-ad69-d3b007791fe7",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "6b4ea469-6b11-4fbe-a1f9-fd6edbe5726f",
+    "eaten_at": "2026-11-16T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "fbcb3665-1633-49e5-b97d-70dd6696b36a",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "0397c3f9-0e44-4961-84b7-3479b36dcf09",
+    "eaten_at": "2026-11-15T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "4d1d5897-d0e8-4cf6-8e12-006a89f3d074",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "ff6b77c3-e7b2-4014-bce7-954584aea06a",
+    "eaten_at": "2026-11-14T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "f0e9ee24-287b-49bc-a6e0-4ec7aaa10182",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "d736aed0-290c-4827-9ef8-6ae36153bc2d",
+    "eaten_at": "2026-11-13T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "4287e573-a484-4561-baa6-cab0003e3b04",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "2859675b-9cc2-46bc-aee9-bee54a5bcbf5",
+    "eaten_at": "2026-11-12T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "02e39efe-421c-44c6-b2d3-1bf31c2aad9f",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  },
+  {
+    "id": "10a4e405-6752-49bb-84f3-795b33697ec3",
+    "eaten_at": "2026-11-11T07:30:00Z",
+    "slot": "lunch",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "940816ac-38c6-4c21-944d-b90ff8ca5a3a",
+        "name": "home meals",
+        "quantity": 1.0,
+        "unit": "serving",
+        "grams": null,
+        "kcal": 2070.0,
+        "protein": 150.0,
+        "carbs": 200.0,
+        "fat": 60.0,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 2070.0,
+          "protein": 150.0,
+          "carbs": 200.0,
+          "fat": 60.0,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "fibre": 0.0
+    }
+  }
+]

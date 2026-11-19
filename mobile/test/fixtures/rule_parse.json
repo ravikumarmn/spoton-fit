@@ -1,0 +1,12 @@
+{
+  "kind": "not_after",
+  "food": "tea",
+  "limit": null,
+  "time": "16:00",
+  "summary": "No tea after 4 PM.",
+  "original_text": "no tea after 4 pm",
+  "id": null,
+  "state": null,
+  "blocks_now": null,
+  "status": null
+}

@@ -1,0 +1,31 @@
+{
+  "age": 26,
+  "sex": "male",
+  "height_cm": 177.8,
+  "weight_kg": 92.0,
+  "goal": "lose_fat",
+  "activity": "light",
+  "body_fat_pct": 3.0,
+  "goal_weight_kg": 85.0,
+  "baseline_steps": 5000,
+  "start_date": "2026-10-18",
+  "targets": {
+    "bmi": 29.1,
+    "bmr": 2298.0,
+    "maintenance": 3159.0,
+    "kcal": 2530,
+    "kcal_floor": 2298,
+    "protein_g": 144,
+    "fat_g": 76,
+    "carbs_g": 317,
+    "fibre_g": 35,
+    "water_ml": 3200,
+    "steps": 7500,
+    "kcal_adjustment": 0,
+    "steps_adjustment": 0,
+    "maintenance_source": "formula"
+  },
+  "warnings": [
+    "Body fat 3% is unusually low (under 8% is rare for a male adult). A too-low value raises your BMR and calorie target a lot; check it against your body-composition report, or leave it empty."
+  ]
+}

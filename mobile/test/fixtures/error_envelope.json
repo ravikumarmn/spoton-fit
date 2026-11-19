@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "invalid_credentials",
+    "message": "Incorrect email or password",
+    "request_id": "98c44511f3a0"
+  }
+}

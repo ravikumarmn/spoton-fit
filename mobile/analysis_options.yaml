@@ -1,0 +1,19 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    # Flutter 3.50 moved Material/Cupertino into material_ui / cupertino_ui; importing the old
+    # package:flutter/material.dart is an error here so nothing drifts back to the deprecated one.
+    deprecated_member_use: error
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    avoid_print: true
+    always_declare_return_types: true
+    unawaited_futures: true

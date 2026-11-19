@@ -1,0 +1,54 @@
+name: Evals
+
+# Live Gemini evals -> MLflow. Weekly, on demand, and when food/agent code or data changes.
+# Needs repository secrets GOOGLE_API_KEY (and optionally LANGSMITH_API_KEY).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 2 * * 1"  # Mondays 08:00 IST
+  push:
+    branches: [main]
+    paths:
+      - "src/spotonfit/agents/**"
+      - "src/spotonfit/core/nutrition.py"
+      - "evals/**"
+      - "src/spotonfit/config.py"
+
+jobs:
+  food-evals:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      LANGSMITH_TRACING: "true"
+      LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+      LANGSMITH_PROJECT: spotonfit-evals
+      MLFLOW_TRACKING_URI: sqlite:///mlflow.db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: |
+          uv python install
+          uv sync --locked --group evals
+      - name: Run live food evals (Gemini)
+        run: uv run python evals/run_evals.py
+      - name: Run live coach evals (safety 100%, live numbers >= 95%)
+        if: always()
+        run: uv run python evals/run_coach_evals.py
+      - name: Summary
+        if: always()
+        run: |
+          [ -f eval_results.json ] && uv run python -c "import json;s=json.load(open('eval_results.json'))['summary'];print('### Food evals\n\n| metric | value |\n|---|---|\n' + '\n'.join(f'| {k} | {v} |' for k,v in s.items()))" >> $GITHUB_STEP_SUMMARY || true
+      - name: Upload MLflow store and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-evals
+          path: |
+            mlflow.db
+            mlruns/
+            eval_results.json
+            coach_eval_results.json
+          if-no-files-found: ignore

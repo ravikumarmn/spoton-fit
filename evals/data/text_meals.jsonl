@@ -1,0 +1,13 @@
+{"text": "3 idlis with one katori sambar", "truth_kcal": 298, "truth_protein_g": 10.3, "truth_items": [["idli", 120], ["sambar", 150]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "2 chapatis, 1 katori chicken curry and some salad", "truth_kcal": 448, "truth_protein_g": 29.6, "truth_items": [["chapati", 80], ["chicken curry", 150], ["salad", 100]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "one cup rice with dal and vegetable palya", "truth_kcal": 506, "truth_protein_g": 16.8, "truth_items": [["cooked rice", 150], ["dal", 150], ["vegetable palya", 150]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "2 boiled eggs and a banana", "truth_kcal": 232, "truth_protein_g": 13.7, "truth_items": [["boiled egg", 100], ["banana", 100]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "oats 40g cooked in a glass of milk", "truth_kcal": 268, "truth_protein_g": 11.5, "truth_items": [["oats", 40], ["milk", 200]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "150 g greek yogurt with a handful of almonds", "truth_kcal": 199, "truth_protein_g": 16.7, "truth_items": [["greek yogurt", 150], ["almonds", 15]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "filter coffee and 2 plain dosas with chutney", "truth_kcal": 364, "truth_protein_g": 9.9, "truth_items": [["filter coffee", 120], ["plain dosa", 110], ["coconut chutney", 30]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "half tandoori chicken (4 pieces) and 2 butter naan", "truth_kcal": 1260, "truth_protein_g": 104.4, "truth_items": [["tandoori chicken", 360], ["butter naan", 180]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "ragi mudde with chicken saaru", "truth_kcal": 382, "truth_protein_g": 24.6, "truth_items": [["ragi mudde", 150], ["chicken curry", 150]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "a plate of chicken biryani with raita", "truth_kcal": 792, "truth_protein_g": 35.1, "truth_items": [["chicken biryani", 400], ["curd", 100]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "6 boiled eggs", "truth_kcal": 429, "truth_protein_g": 37.8, "truth_items": [["boiled egg", 300]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "4 chapatis", "truth_kcal": 416, "truth_protein_g": 15.2, "truth_items": [["chapati", 160]], "truth_source": "seed table v0.2 (approximate, not weighed)"}
+{"text": "2 bananas and a glass of milk", "truth_kcal": 294, "truth_protein_g": 8.4, "truth_items": [["banana", 200], ["milk", 200]], "truth_source": "seed table v0.2 (approximate, not weighed)"}

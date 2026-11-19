@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+*.db
+*.db-wal
+*.db-shm
+mlruns/
+mlflow.db
+.streamlit/secrets.toml
+ci.db
+.env
+eval_results.json
+coach_eval_results.json
+.neon
+.DS_Store

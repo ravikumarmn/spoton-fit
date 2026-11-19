@@ -1,0 +1,64 @@
+{
+  "items": [
+    {
+      "name": "boiled egg",
+      "quantity": 6.0,
+      "unit": "piece",
+      "grams_per_unit": 50.0,
+      "per_unit": {
+        "kcal": 72.0,
+        "protein": 6.3,
+        "carbs": 0.4,
+        "fat": 4.8,
+        "fibre": 0.0
+      },
+      "oil_level": "none",
+      "remark": null,
+      "source": "ai_estimate",
+      "grams": 300.0,
+      "kcal": 432.0,
+      "protein": 37.8,
+      "carbs": 2.4,
+      "fat": 28.8,
+      "fibre": 0.0,
+      "confidence": 0.9
+    },
+    {
+      "name": "puri",
+      "quantity": 3.0,
+      "unit": "piece",
+      "grams_per_unit": 30.0,
+      "per_unit": {
+        "kcal": 110.0,
+        "protein": 2.0,
+        "carbs": 12.0,
+        "fat": 6.0,
+        "fibre": 0.5
+      },
+      "oil_level": "heavy",
+      "remark": "deep-fried, very oily",
+      "source": "ai_estimate",
+      "grams": 90.0,
+      "kcal": 330.0,
+      "protein": 6.0,
+      "carbs": 36.0,
+      "fat": 18.0,
+      "fibre": 1.5,
+      "confidence": 0.8
+    }
+  ],
+  "totals": {
+    "kcal": 762.0,
+    "protein": 43.8,
+    "carbs": 38.4,
+    "fat": 46.8,
+    "fibre": 1.5
+  },
+  "oily_items": [
+    "puri"
+  ],
+  "warnings": [],
+  "meal_slot": "breakfast",
+  "clarify": null,
+  "latency_ms": 0
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "61192fbf-3e54-47fc-abc4-f0a27267a381",
+    "eaten_at": "2026-11-19T01:59:24.285170Z",
+    "slot": "breakfast",
+    "note": null,
+    "source": "text",
+    "is_favourite": true,
+    "items": [
+      {
+        "id": "28956069-8c25-401d-8cec-870b88a37877",
+        "name": "boiled egg",
+        "quantity": 6.0,
+        "unit": "piece",
+        "grams": 300.0,
+        "kcal": 432.0,
+        "protein": 37.8,
+        "carbs": 2.4,
+        "fat": 28.8,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 72.0,
+          "protein": 6.3,
+          "carbs": 0.4,
+          "fat": 4.8,
+          "fibre": 0.0
+        }
+      },
+      {
+        "id": "fdf48712-c1c8-43f7-992b-d7bb560824b8",
+        "name": "puri",
+        "quantity": 3.0,
+        "unit": "piece",
+        "grams": 90.0,
+        "kcal": 330.0,
+        "protein": 6.0,
+        "carbs": 36.0,
+        "fat": 18.0,
+        "fibre": 1.5,
+        "oil_level": "heavy",
+        "remark": "deep-fried, very oily",
+        "source": "ai_estimate",
+        "per_unit": {
+          "kcal": 110.0,
+          "protein": 2.0,
+          "carbs": 12.0,
+          "fat": 6.0,
+          "fibre": 0.5
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 762.0,
+      "protein": 43.8,
+      "carbs": 38.4,
+      "fat": 46.8,
+      "fibre": 1.5
+    }
+  },
+  {
+    "id": "d7748ce9-53d7-4f33-9ef1-bcf5c434c22b",
+    "eaten_at": "2026-11-19T01:59:24.398995Z",
+    "slot": "snack",
+    "note": null,
+    "source": "text",
+    "is_favourite": false,
+    "items": [
+      {
+        "id": "38a17841-bb71-4be6-9488-c5f15297def1",
+        "name": "boiled egg",
+        "quantity": 6.0,
+        "unit": "piece",
+        "grams": 300.0,
+        "kcal": 468.0,
+        "protein": 37.8,
+        "carbs": 2.4,
+        "fat": 28.8,
+        "fibre": 0.0,
+        "oil_level": "none",
+        "remark": null,
+        "source": "edited",
+        "per_unit": {
+          "kcal": 78.0,
+          "protein": 6.3,
+          "carbs": 0.4,
+          "fat": 4.8,
+          "fibre": 0.0
+        }
+      }
+    ],
+    "totals": {
+      "kcal": 468.0,
+      "protein": 37.8,
+      "carbs": 2.4,
+      "fat": 28.8,
+      "fibre": 0.0
+    }
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "review": {
+    "id": "d0958602-bbf6-4572-b4b7-4aa25cf30d57",
+    "week_start": "2026-11-08",
+    "summary": {
+      "week_start": "2026-11-08",
+      "week_end": "2026-11-14",
+      "days_logged": 7,
+      "avg_kcal": 2070,
+      "avg_protein": 150,
+      "avg_steps": 6000,
+      "on_target_days": 7,
+      "protein_hit_days": 7,
+      "kcal_target": 1890,
+      "protein_target_g": 144,
+      "steps_target": 7000,
+      "trend_start_kg": 92.0,
+      "trend_end_kg": 92.0,
+      "trend_change_kg": 0.0,
+      "waist_change_cm": null,
+      "maintenance_kcal": 2290,
+      "maintenance_source": "learned",
+      "notes": []
+    },
+    "proposal": {
+      "kind": "steps",
+      "delta": 1500,
+      "text": "Add 1,500 steps a day (to 8,500)",
+      "reason": "Your trend hasn't moved for 2 weeks even though you've been consistent."
+    },
+    "decision": null,
+    "decided_at": null
+  },
+  "pending_decision": true,
+  "next_review_on": "2026-11-22"
+}

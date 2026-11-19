@@ -1,0 +1,39 @@
+{
+  "day": "2026-11-19",
+  "eaten": {
+    "kcal": 1230.0,
+    "protein_g": 81.6,
+    "carbs_g": 40.8,
+    "fat_g": 75.6,
+    "fibre_g": 1.5
+  },
+  "left": {
+    "kcal": 840.0,
+    "protein_g": 62.0,
+    "carbs_g": 192.0,
+    "fat_g": -14.0,
+    "water_ml": 2700.0,
+    "steps": 3600.0
+  },
+  "targets": {
+    "bmi": 29.1,
+    "bmr": 1880.0,
+    "maintenance": 2585.0,
+    "kcal": 2070,
+    "kcal_floor": 1880,
+    "protein_g": 144,
+    "fat_g": 62,
+    "carbs_g": 233,
+    "fibre_g": 29,
+    "water_ml": 3200,
+    "steps": 7500,
+    "kcal_adjustment": 0,
+    "steps_adjustment": 0,
+    "maintenance_source": "formula"
+  },
+  "water_ml": 500,
+  "steps": 3900,
+  "workout_min": 30.0,
+  "burned_kcal_est": 984.0,
+  "nudges": []
+}

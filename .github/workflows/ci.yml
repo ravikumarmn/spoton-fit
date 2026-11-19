@@ -1,0 +1,92 @@
+name: CI
+
+# Every push and PR: lint -> format check -> tests -> migrations check -> offline eval
+# -> API boot check. deploy.yml runs after this workflow succeeds on main.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: test
+      JWT_SECRET: ci-only-not-a-secret
+      DATABASE_URL: sqlite+aiosqlite:///./ci.db
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install Python (from .python-version) and dependencies
+        run: |
+          uv python install
+          uv sync --locked --group web   # web = Streamlit client (its tests run with the API tests)
+      - name: Lint
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: Tests
+        run: uv run pytest -q
+      - name: Migrations apply cleanly and match the models
+        run: |
+          uv run alembic upgrade head
+          uv run alembic check
+      - name: Eval pipeline check (offline, no API calls)
+        run: uv run python evals/run_evals.py --stub
+      - name: Coach safety routing (offline; gate 100%)
+        run: uv run python evals/run_coach_evals.py --stub
+      - name: API boots and is ready
+        run: |
+          uv run uvicorn spotonfit.api.main:app --port 8000 &
+          for i in $(seq 1 30); do curl -fs http://127.0.0.1:8000/readyz && exit 0; sleep 1; done
+          exit 1
+
+  mobile:
+    # The Flutter app. Its tests run against API responses generated from THIS commit's API,
+    # so a response change that breaks the app fails here, not on someone's phone.
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: test
+      JWT_SECRET: ci-only-not-a-secret
+      COACH_MEMORY: memory
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Generate API fixtures from the current API
+        run: |
+          uv python install
+          uv sync --locked
+          PYTHONPATH=src:. uv run python scripts/gen_mobile_fixtures.py
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.50.0"
+          channel: stable
+          cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Analyze, format check and test
+        working-directory: mobile
+        run: |
+          flutter pub get
+          dart format --output=none --set-exit-if-changed lib test
+          flutter analyze
+          flutter test
+      - name: Build a debug APK
+        working-directory: mobile
+        run: flutter build apk --debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spoton-debug-apk
+          path: mobile/build/app/outputs/flutter-apk/app-debug.apk

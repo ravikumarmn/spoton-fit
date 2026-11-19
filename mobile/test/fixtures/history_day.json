@@ -1,0 +1,505 @@
+{
+  "period": "day",
+  "start": "2026-10-18",
+  "end": "2026-11-19",
+  "days_logged": 33,
+  "rows": [
+    {
+      "day": "2026-10-18",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-19",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-20",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-21",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-22",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-23",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-24",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-25",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-26",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-27",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-28",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-29",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-30",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-10-31",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-01",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-02",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-03",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-04",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-05",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-06",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-07",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-08",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-09",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-10",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-11",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-12",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-13",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-14",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-15",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-16",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-17",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-18",
+      "kcal": 2070.0,
+      "protein": 150.0,
+      "carbs": 200.0,
+      "fat": 60.0,
+      "water_ml": 0.0,
+      "steps": 6000,
+      "weight_kg": 92.0,
+      "logged": true
+    },
+    {
+      "day": "2026-11-19",
+      "kcal": 1230.0,
+      "protein": 81.6,
+      "carbs": 40.8,
+      "fat": 75.6,
+      "water_ml": 500.0,
+      "steps": 3900,
+      "weight_kg": 92.0,
+      "logged": true
+    }
+  ],
+  "weight_trend": [
+    {
+      "day": "2026-10-18",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-19",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-20",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-21",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-22",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-23",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-24",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-25",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-26",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-27",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-28",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-29",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-30",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-10-31",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-01",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-02",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-03",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-04",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-05",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-06",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-07",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-08",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-09",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-10",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-11",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-12",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-13",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-14",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-15",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-16",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-17",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-18",
+      "trend_kg": 92.0
+    },
+    {
+      "day": "2026-11-19",
+      "trend_kg": 92.0
+    }
+  ]
+}
