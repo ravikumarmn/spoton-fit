@@ -95,5 +95,6 @@ async def delete_account(body: AccountDeleteIn, request: Request, user: CurrentU
     if not verify_password(body.password, user.password_hash):
         raise api_error(status.HTTP_401_UNAUTHORIZED, "invalid_credentials", "Incorrect password")
     user_id = user.id
-    await delete_user_data(session, user_id)
+    # Chats first: if that fails, nothing is deleted yet and the user can simply retry.
     await delete_chat_threads(request.app.state.checkpointer, user_id)
+    await delete_user_data(session, user_id)

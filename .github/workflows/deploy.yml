@@ -73,9 +73,13 @@ jobs:
             --memory=1Gi
             --cpu-boost
             --timeout=300
+          # gemini-3.8-flash returned repeated 504s (Google-side overload) on 20 Nov 2026; Flash-Lite
+          # until it is stable. Change here, or per revision in the Cloud Run console.
           env_vars: |
             ENVIRONMENT=prod
             AUTO_MIGRATE=false
+            SPOTON_VISION_MODEL=gemini-3.5-flash-lite
+            SPOTON_COACH_MODEL=gemini-3.5-flash-lite
           secrets: |
             JWT_SECRET=spotonfit-jwt-secret:latest
             GOOGLE_API_KEY=spotonfit-google-api-key:latest

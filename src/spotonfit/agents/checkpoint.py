@@ -19,6 +19,10 @@ from spotonfit.config import settings
 
 log = logging.getLogger(__name__)
 
+# Serialises AsyncPostgresSaver.setup() across workers and instances: concurrent CREATE TABLE
+# calls race and fail with UniqueViolation, which crash-looped Cloud Run workers at startup.
+_SETUP_LOCK_ID = 7_310_442
+
 
 def psycopg_url(database_url: str) -> str:
     """postgresql+asyncpg://...?ssl=require -> postgresql://...?sslmode=require (psycopg form)."""
@@ -39,11 +43,22 @@ async def open_checkpointer(database_url: str | None = None, mode: str | None = 
         from psycopg_pool import AsyncConnectionPool
 
         kwargs = {"autocommit": True, "prepare_threshold": 0, "row_factory": dict_row}
+        # check=: Neon suspends idle computes and closes their connections; test each one on
+        # checkout instead of handing a dead connection to the coach.
         async with AsyncConnectionPool(
-            psycopg_url(url), max_size=settings.checkpoint_pool_size, kwargs=kwargs, open=False
+            psycopg_url(url),
+            max_size=settings.checkpoint_pool_size,
+            kwargs=kwargs,
+            open=False,
+            check=AsyncConnectionPool.check_connection,
         ) as pool:
             saver = AsyncPostgresSaver(pool)
-            await saver.setup()
+            async with pool.connection() as conn:
+                await conn.execute("SELECT pg_advisory_lock(%s)", (_SETUP_LOCK_ID,))
+                try:
+                    await saver.setup()
+                finally:
+                    await conn.execute("SELECT pg_advisory_unlock(%s)", (_SETUP_LOCK_ID,))
             log.info("coach memory: postgres")
             yield saver
         return
