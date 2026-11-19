@@ -36,7 +36,9 @@ class _WaterSheetState extends ConsumerState<_WaterSheet> {
 
   Future<void> _add(int ml) async {
     try {
-      await ref.read(apiProvider).addWater(ml);
+      await ref
+          .read(apiProvider)
+          .addWater(ml, day: ref.read(selectedDayProvider));
       ref.read(dataVersion.notifier).bump();
       if (!mounted) return;
       final messenger = ScaffoldMessenger.of(context);
@@ -194,7 +196,12 @@ class _WeightSheetState extends ConsumerState<_WeightSheet> {
     if (!_form.currentState!.validate()) return;
     setState(() => _busy = true);
     try {
-      await ref.read(apiProvider).logWeight(parseNumber(_kg.text)!);
+      await ref
+          .read(apiProvider)
+          .logWeight(
+            parseNumber(_kg.text)!,
+            day: ref.read(selectedDayProvider),
+          );
       ref.read(dataVersion.notifier).bump();
       if (mounted) Navigator.pop(context);
     } on ApiException catch (e) {
@@ -262,7 +269,9 @@ class _WorkoutSheetState extends ConsumerState<_WorkoutSheet> {
       _error = null;
     });
     try {
-      final r = await ref.read(apiProvider).logWorkout(_text.text.trim());
+      final r = await ref
+          .read(apiProvider)
+          .logWorkout(_text.text.trim(), day: ref.read(selectedDayProvider));
       ref.read(dataVersion.notifier).bump();
       if (mounted) setState(() => _done = r);
     } on ApiException catch (e) {

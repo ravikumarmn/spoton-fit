@@ -303,21 +303,32 @@ class HttpSpotOnApi implements SpotOnApi {
   );
 
   @override
-  Future<void> addWater(int ml) => _json('POST', '/v1/water', data: {'ml': ml});
+  Future<void> addWater(int ml, {DateTime? day}) => _json(
+    'POST',
+    '/v1/water',
+    data: {'ml': ml, if (day != null) 'day': _date(day)},
+  );
 
   @override
   Future<void> setSteps(DateTime day, int steps) =>
       _json('PUT', '/v1/steps/${_date(day)}', data: {'steps': steps});
 
   @override
-  Future<void> logWeight(double kg) =>
-      _json('POST', '/v1/weights', data: {'kg': kg});
+  Future<void> logWeight(double kg, {DateTime? day}) => _json(
+    'POST',
+    '/v1/weights',
+    data: {'kg': kg, if (day != null) 'day': _date(day)},
+  );
 
   @override
-  Future<List<WorkoutResult>> logWorkout(String text) async =>
-      _list(await _json('POST', '/v1/workouts', data: {'text': text}))
-          .map(WorkoutResult.fromJson)
-          .toList();
+  Future<List<WorkoutResult>> logWorkout(String text, {DateTime? day}) async =>
+      _list(
+        await _json(
+          'POST',
+          '/v1/workouts',
+          data: {'text': text, if (day != null) 'day': _date(day)},
+        ),
+      ).map(WorkoutResult.fromJson).toList();
 
   @override
   Future<History> history(String period) async => History.fromJson(

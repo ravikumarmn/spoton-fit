@@ -218,7 +218,8 @@ class _Body extends ConsumerWidget {
             ],
           ),
         ),
-        if (viewingToday) ...[
+        // Shown on past days too: each one saves to the day being viewed.
+        ...[
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -227,7 +228,9 @@ class _Body extends ConsumerWidget {
                 label: '+250 ml water',
                 icon: Icons.water_drop_outlined,
                 onTap: () async {
-                  await ref.read(apiProvider).addWater(250);
+                  await ref
+                      .read(apiProvider)
+                      .addWater(250, day: ref.read(selectedDayProvider));
                   ref.read(dataVersion.notifier).bump();
                   if (context.mounted) {
                     showToast(context, 'Added 250 ml of water');

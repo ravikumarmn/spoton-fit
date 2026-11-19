@@ -181,6 +181,8 @@ async def create_meal(
 ) -> Meal:
     """Save a confirmed meal. Totals are recomputed as quantity x per_unit.
     Repeating a request with the same Idempotency-Key returns the first meal (200)."""
+    if body.eaten_at and body.eaten_at > dt.datetime.now(dt.UTC) + dt.timedelta(minutes=10):
+        raise api_error(status.HTTP_422_UNPROCESSABLE_CONTENT, "future_day", "You can't log a meal in the future")
     if idempotency_key:
         existing = await session.scalar(select(Meal).where(Meal.user_id == user.id, Meal.client_key == idempotency_key))
         if existing is not None:

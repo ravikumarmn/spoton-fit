@@ -180,6 +180,21 @@ class SelectedDay extends Notifier<DateTime?> {
   void set(DateTime? day) => state = day;
 }
 
+/// When to record something logged while viewing [day] (null means today: the server uses
+/// now). A past day gets the current clock time on that date, so it counts on that day.
+DateTime? loggedAtFor(DateTime? day) {
+  if (day == null) return null;
+  final now = DateTime.now();
+  return DateTime(
+    day.year,
+    day.month,
+    day.day,
+    now.hour,
+    now.minute,
+    now.second,
+  );
+}
+
 final selectedDayProvider = NotifierProvider<SelectedDay, DateTime?>(
   SelectedDay.new,
 );

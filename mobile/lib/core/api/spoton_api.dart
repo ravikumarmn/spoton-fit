@@ -34,10 +34,10 @@ abstract interface class SpotOnApi {
 
   // Today and tracking
   Future<Today> today({DateTime? day});
-  Future<void> addWater(int ml);
+  Future<void> addWater(int ml, {DateTime? day});
   Future<void> setSteps(DateTime day, int steps);
-  Future<void> logWeight(double kg);
-  Future<List<WorkoutResult>> logWorkout(String text);
+  Future<void> logWeight(double kg, {DateTime? day});
+  Future<List<WorkoutResult>> logWorkout(String text, {DateTime? day});
   Future<History> history(String period);
 
   // Meals

@@ -46,6 +46,7 @@ class FakeApi implements SpotOnApi {
   List<ChatMessage> thread = [];
   String? lastDecision;
   String? lastWorkoutText;
+  DateTime? lastWorkoutDay;
   String? lastAnalyzeNote;
   bool lastAnalyzeHadImage = false;
   Profile? savedProfile;
@@ -130,18 +131,21 @@ class FakeApi implements SpotOnApi {
   Future<Today> today({DateTime? day}) async => todayData;
 
   @override
-  Future<void> addWater(int ml) async => calls.add('water:$ml');
+  Future<void> addWater(int ml, {DateTime? day}) async =>
+      calls.add('water:$ml${day == null ? '' : '@${_ymd(day)}'}');
 
   @override
   Future<void> setSteps(DateTime day, int steps) async =>
       calls.add('steps:$steps');
 
   @override
-  Future<void> logWeight(double kg) async => calls.add('weight:$kg');
+  Future<void> logWeight(double kg, {DateTime? day}) async =>
+      calls.add('weight:$kg${day == null ? '' : '@${_ymd(day)}'}');
 
   @override
-  Future<List<WorkoutResult>> logWorkout(String text) async {
+  Future<List<WorkoutResult>> logWorkout(String text, {DateTime? day}) async {
     lastWorkoutText = text;
+    lastWorkoutDay = day;
     return fixtureList('workouts').map(WorkoutResult.fromJson).toList();
   }
 
@@ -310,3 +314,6 @@ class FakeApi implements SpotOnApi {
     return Uint8List.fromList(utf8.encode('{}'));
   }
 }
+
+String _ymd(DateTime d) =>
+    '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';

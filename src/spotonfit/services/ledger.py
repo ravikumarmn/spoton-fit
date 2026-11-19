@@ -57,6 +57,22 @@ def local_today() -> dt.date:
     return dt.datetime.now(settings.tz).date()
 
 
+class FutureDay(ValueError):
+    """Logging for a day that hasn't happened yet."""
+
+
+def logged_at(day: dt.date | None) -> dt.datetime:
+    """When to record a log for a local `day`: now for today (or no day), else the same clock
+    time on that day, so it lands inside that day's boundaries. Raises FutureDay."""
+    now = dt.datetime.now(dt.UTC)
+    today = local_today()
+    if day is None or day == today:
+        return now
+    if day > today:
+        raise FutureDay("You can't log for a day that hasn't happened yet")
+    return dt.datetime.combine(day, now.astimezone(settings.tz).timetz()).astimezone(dt.UTC)
+
+
 def day_bounds(day: dt.date) -> tuple[dt.datetime, dt.datetime]:
     """[start, end) of a local calendar day as aware datetimes (DB compares in UTC)."""
     start = dt.datetime.combine(day, dt.time.min, tzinfo=settings.tz)

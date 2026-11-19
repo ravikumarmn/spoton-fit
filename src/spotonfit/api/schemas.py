@@ -229,11 +229,12 @@ class FoodMemoryOut(BaseModel):
 
 class WaterIn(BaseModel):
     ml: int = Field(gt=0, le=3000)
+    day: dt.date | None = Field(None, description="Local day to log for (default today); not in the future")
 
 
 class WeightIn(BaseModel):
     kg: float = Field(ge=30, le=300)
-    day: dt.date | None = None
+    day: dt.date | None = Field(None, description="Local day (default today); not in the future")
 
 
 class StepsIn(BaseModel):
@@ -242,6 +243,7 @@ class StepsIn(BaseModel):
 
 class WorkoutIn(BaseModel):
     text: str = Field(min_length=2, max_length=500)
+    day: dt.date | None = Field(None, description="Local day to log for (default today); not in the future")
 
 
 class WorkoutOut(BaseModel):

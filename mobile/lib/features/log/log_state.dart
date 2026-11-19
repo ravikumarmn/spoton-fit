@@ -183,6 +183,8 @@ class DraftNotifier extends Notifier<DraftState?> {
             idempotencyKey: d.key,
             note: d.note,
             isFavourite: d.favourite,
+            // The day being viewed on Today (bug: past-day meals were saved to today).
+            eatenAt: loggedAtFor(ref.read(selectedDayProvider)),
           );
     state = null;
     ref.read(dataVersion.notifier).bump();

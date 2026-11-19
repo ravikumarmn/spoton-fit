@@ -25,12 +25,14 @@ from spotonfit.core.rules import nudges
 from spotonfit.core.trend import aggregate, weight_trend
 from spotonfit.db import StepLog, WaterLog, WeightLog, Workout
 from spotonfit.services.ledger import (
+    FutureDay,
     burned_so_far,
     daily_frame,
     day_summary,
     get_profile,
     get_profile_row,
     local_today,
+    logged_at,
 )
 from spotonfit.services.rules import statuses
 
@@ -38,9 +40,21 @@ router = APIRouter(prefix="/v1", tags=["tracking"])
 log = logging.getLogger(__name__)
 
 
+def _when(day: dt.date | None) -> dt.datetime:
+    try:
+        return logged_at(day)
+    except FutureDay as e:
+        raise api_error(status.HTTP_422_UNPROCESSABLE_CONTENT, "future_day", str(e)) from e
+
+
+def _not_future(day: dt.date) -> dt.date:
+    _when(day)
+    return day
+
+
 @router.post("/water", status_code=status.HTTP_201_CREATED)
 async def add_water(body: WaterIn, user: CurrentUser, session: Session) -> dict:
-    session.add(WaterLog(user_id=user.id, at=dt.datetime.now(dt.UTC), ml=body.ml))
+    session.add(WaterLog(user_id=user.id, at=_when(body.day), ml=body.ml))
     await session.commit()
     return {"ml": body.ml}
 
@@ -48,7 +62,7 @@ async def add_water(body: WaterIn, user: CurrentUser, session: Session) -> dict:
 @router.post("/weights", status_code=status.HTTP_201_CREATED)
 async def log_weight(body: WeightIn, user: CurrentUser, session: Session) -> dict:
     """One weigh-in per day; logging again the same day replaces it."""
-    day = body.day or local_today()
+    day = _not_future(body.day or local_today())
     row = await session.scalar(select(WeightLog).where(WeightLog.user_id == user.id, WeightLog.day == day))
     if row:
         row.kg = body.kg
@@ -61,6 +75,7 @@ async def log_weight(body: WeightIn, user: CurrentUser, session: Session) -> dic
 @router.put("/steps/{day}")
 async def set_steps(day: dt.date, body: StepsIn, user: CurrentUser, session: Session) -> dict:
     """Total steps for a day (manual now; synced from Android in Phase 4)."""
+    _not_future(day)
     row = await session.scalar(select(StepLog).where(StepLog.user_id == user.id, StepLog.day == day))
     if row:
         row.steps = body.steps
@@ -82,6 +97,7 @@ async def log_workout(
     profile = await get_profile(session, user.id)
     if not profile:
         raise profile_required()
+    at = _when(body.day)  # before the model call: a future day costs nothing
     ai_limit(request, user.id)
     try:
         rows = await parse_workouts(body.text, profile.weight_kg, parser)
@@ -92,9 +108,8 @@ async def log_workout(
     except Exception as e:
         log.exception("workout parsing failed")
         raise api_error(status.HTTP_502_BAD_GATEWAY, "ai_failed", "Could not read that workout, try again") from e
-    now = dt.datetime.now(dt.UTC)
     for r in rows:
-        session.add(Workout(user_id=user.id, at=now, raw_text=body.text, **r))
+        session.add(Workout(user_id=user.id, at=at, raw_text=body.text, **r))
     await session.commit()
     return rows
 

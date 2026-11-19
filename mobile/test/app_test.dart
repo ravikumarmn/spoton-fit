@@ -272,6 +272,20 @@ void main() {
       expect(api.calls, contains('water:250'));
     });
 
+    testWidgets('water and workouts on a past day go to that day', (
+      tester,
+    ) async {
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      await h.pump();
+      await h.tap(find.byTooltip('Previous day'));
+      final viewed = api.todayData.day.subtract(const Duration(days: 1));
+      String ymd(DateTime d) =>
+          '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+      await h.tapText('+250 ml water');
+      expect(api.calls, contains('water:250@${ymd(viewed)}'));
+    });
+
     testWidgets('meal options: log again and favourite', (tester) async {
       final api = FakeApi();
       final h = Harness(tester, api);
@@ -354,6 +368,8 @@ void main() {
         await h.tapText('Save meal');
 
         final s = api.saved.single;
+        expect(s.eatenAt, isNull); // viewing today: the server records "now"
+        expect(find.textContaining('Saving to'), findsNothing);
         expect(s.slot, 'breakfast');
         expect(s.source, 'text');
         expect(s.key, isNotEmpty);
@@ -433,6 +449,25 @@ void main() {
       await h.tapText('Discard');
       expect(find.text('Calories left'), findsOneWidget);
       expect(api.saved, isEmpty);
+    });
+
+    testWidgets('a meal logged while viewing yesterday is saved to yesterday', (
+      tester,
+    ) async {
+      // Bug report: meals added on a past day were counted on today.
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      await h.pump();
+      await h.tap(find.byTooltip('Previous day'));
+      await toReview(h);
+      expect(find.textContaining('Saving to'), findsOneWidget);
+      await h.tapText('Save meal');
+      final at = api.saved.single.eatenAt!;
+      final viewed = api.todayData.day.subtract(const Duration(days: 1));
+      expect(
+        [at.year, at.month, at.day],
+        [viewed.year, viewed.month, viewed.day],
+      );
     });
 
     testWidgets('when analysis fails, the user can retry or type it instead', (

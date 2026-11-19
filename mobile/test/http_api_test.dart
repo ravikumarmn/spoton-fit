@@ -414,4 +414,26 @@ void main() {
     expect(h.period, 'week');
     expect(t.adapter.requests.last.queryParameters, {'period': 'week'});
   });
+
+  test(
+    'logging for a past day sends that day (and nothing for today)',
+    () async {
+      final t = make(
+        (o) =>
+            o.path == '/v1/workouts' ? json(fixtureList('workouts')) : json({}),
+        start: old,
+      );
+      await t.api.addWater(250, day: DateTime(2026, 11, 18));
+      expect(t.adapter.requests.last.data, {'ml': 250, 'day': '2026-11-18'});
+      await t.api.addWater(250);
+      expect(t.adapter.requests.last.data, {'ml': 250});
+      await t.api.logWeight(91.5, day: DateTime(2026, 11, 18));
+      expect(t.adapter.requests.last.data, {'kg': 91.5, 'day': '2026-11-18'});
+      await t.api.logWorkout('15 min cycling', day: DateTime(2026, 11, 18));
+      expect(t.adapter.requests.last.data, {
+        'text': '15 min cycling',
+        'day': '2026-11-18',
+      });
+    },
+  );
 }

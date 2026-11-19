@@ -275,6 +275,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     }
     final total = d.total;
     final editing = d.editingMealId != null;
+    final pastDay = ref.watch(selectedDayProvider);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -306,6 +307,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 child: ListView(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   children: [
+                    if (pastDay != null && !editing) ...[
+                      InfoBanner(
+                        'Saving to ${dayTitle(pastDay, DateTime.now())}, '
+                        '${longDate(pastDay)}',
+                        icon: Icons.event_outlined,
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     if (_error != null) ...[
                       InfoBanner(_error!, kind: BannerKind.error),
                       const SizedBox(height: 12),
