@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -598,6 +597,52 @@ void main() {
       expect(find.text('Edit meal'), findsOneWidget);
       await h.tapText('Save changes');
       expect(api.calls.any((c) => c.startsWith('updateMeal:')), isTrue);
+    });
+  });
+
+  group('motion', () {
+    testWidgets('saving a meal gives a firm haptic tap', (tester) async {
+      final haptics = <String>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'HapticFeedback.vibrate') {
+            haptics.add(call.arguments as String);
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      await h.pump();
+      await h.tap(find.byIcon(Icons.add));
+      await h.tapText('Type');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'What did you eat?'),
+        '6 eggs',
+      );
+      await tester.pump();
+      await h.tapText('Analyze');
+      await h.tapText('Save meal');
+      expect(haptics, contains('HapticFeedbackType.mediumImpact'));
+    });
+
+    testWidgets('numbers show at once when the phone turns animations off', (
+      tester,
+    ) async {
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      await h.pump();
+      await tester.pump(); // a single frame: no count-up in between
+      expect(find.text(fmtInt(api.todayData.leftKcal)), findsOneWidget);
     });
   });
 

@@ -144,7 +144,7 @@ class _Body extends ConsumerWidget {
               Expanded(
                 child: _Goal(
                   title: over ? 'Calories over' : 'Calories left',
-                  value: fmtInt(over ? -left : left),
+                  amount: over ? -left : left,
                   unit: 'kcal',
                   detail:
                       '${fmtInt(t.kcal)} − ${fmtInt(data.eaten.kcal)} eaten',
@@ -163,7 +163,7 @@ class _Body extends ConsumerWidget {
                   title: data.leftProteinG < 0
                       ? 'Protein over'
                       : 'Protein left',
-                  value: fmtInt(data.leftProteinG.abs()),
+                  amount: data.leftProteinG.abs(),
                   unit: 'g',
                   detail:
                       '${fmtInt(t.proteinG)} − ${fmtInt(data.eaten.protein)} eaten',
@@ -237,6 +237,7 @@ class _Body extends ConsumerWidget {
               label: '+250 ml water',
               icon: Icons.water_drop_outlined,
               onTap: () async {
+                Motion.tick();
                 await ref
                     .read(apiProvider)
                     .addWater(250, day: ref.read(selectedDayProvider));
@@ -444,7 +445,7 @@ class _MealCard extends ConsumerWidget {
 class _Goal extends StatelessWidget {
   const _Goal({
     required this.title,
-    required this.value,
+    required this.amount,
     required this.unit,
     required this.detail,
     required this.eaten,
@@ -453,8 +454,8 @@ class _Goal extends StatelessWidget {
     required this.over,
     required this.semantics,
   });
-  final String title, value, unit, detail, semantics;
-  final double eaten, target;
+  final String title, unit, detail, semantics;
+  final double amount, eaten, target;
   final Color color;
   final bool over;
 
@@ -473,8 +474,8 @@ class _Goal extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  value,
+                AnimatedNumber(
+                  amount,
                   style: AppText.hero.copyWith(
                     fontSize: 34,
                     height: 1.1,
@@ -564,11 +565,15 @@ class _MiniStat extends StatelessWidget {
             const SizedBox(height: 6),
             ClipRRect(
               borderRadius: BorderRadius.circular(99),
-              child: LinearProgressIndicator(
+              child: Motion.tween(
+                context,
                 value: (s.value / t).clamp(0.0, 1.0),
-                minHeight: 5,
-                color: over ? AppColors.amber : s.color,
-                backgroundColor: AppColors.track,
+                builder: (v) => LinearProgressIndicator(
+                  value: v,
+                  minHeight: 5,
+                  color: over ? AppColors.amber : s.color,
+                  backgroundColor: AppColors.track,
+                ),
               ),
             ),
           ],

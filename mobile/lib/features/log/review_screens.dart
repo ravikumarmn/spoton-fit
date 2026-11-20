@@ -73,6 +73,7 @@ class _AnalyzingScreenState extends ConsumerState<AnalyzingScreen> {
         // Read now: this screen is gone by the time Undo is tapped.
         final version = ref.read(dataVersion.notifier);
         final meal = await drafts.save();
+        Motion.saved();
         if (!mounted) return;
         context.go('/today');
         messenger.hideCurrentSnackBar();
@@ -189,6 +190,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         .toList();
     try {
       final meal = await ref.read(draftProvider.notifier).save();
+      Motion.saved();
       if (!mounted) return;
       showToast(
         context,

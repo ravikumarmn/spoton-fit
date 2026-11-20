@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:material_ui/material_ui.dart';
@@ -253,7 +254,10 @@ class QuantityStepper extends StatelessWidget {
             icon: Icons.remove,
             label: 'Less $itemName',
             enabled: value > 0.5,
-            onTap: () => onChanged(_down),
+            onTap: () {
+              Motion.tick();
+              onChanged(_down);
+            },
           ),
           Semantics(
             label: '${fmtNum(value)} $itemName',
@@ -272,7 +276,10 @@ class QuantityStepper extends StatelessWidget {
             icon: Icons.add,
             label: 'More $itemName',
             enabled: true,
-            onTap: () => onChanged(_up),
+            onTap: () {
+              Motion.tick();
+              onChanged(_up);
+            },
           ),
         ],
       ),
@@ -441,21 +448,70 @@ class CalorieRing extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
     width: size,
     height: size,
-    child: CustomPaint(
-      painter: _RingPainter(
-        target <= 0 ? 0 : eaten / target,
-        color ?? AppColors.primary,
-        stroke,
-      ),
-      child: child == null
-          ? null
-          : Padding(
-              padding: EdgeInsets.all(stroke + 8),
-              child: Center(
-                child: FittedBox(fit: BoxFit.scaleDown, child: child),
+    child: Motion.tween(
+      context,
+      value: target <= 0 ? 0 : eaten / target,
+      builder: (fraction) => CustomPaint(
+        painter: _RingPainter(fraction, color ?? AppColors.primary, stroke),
+        child: child == null
+            ? null
+            : Padding(
+                padding: EdgeInsets.all(stroke + 8),
+                child: Center(
+                  child: FittedBox(fit: BoxFit.scaleDown, child: child),
+                ),
               ),
-            ),
+      ),
     ),
+  );
+}
+
+/// Motion and haptics in one place, so they stay consistent and respect the phone's
+/// "remove animations" setting.
+abstract final class Motion {
+  static const duration = Duration(milliseconds: 700);
+  static const curve = Curves.easeOutCubic;
+
+  /// Animates from the previous value (0 on first show) to [value].
+  static Widget tween(
+    BuildContext context, {
+    required double value,
+    required Widget Function(double value) builder,
+  }) => TweenAnimationBuilder<double>(
+    tween: Tween(end: value),
+    duration: MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : duration,
+    curve: curve,
+    builder: (_, v, _) => builder(v),
+  );
+
+  /// A firm tap: something was saved.
+  static void saved() => HapticFeedback.mediumImpact();
+
+  /// A light tick: a small change (a count, a quick add).
+  static void tick() => HapticFeedback.selectionClick();
+}
+
+/// A number that counts up to [value] (formatted with [format]).
+class AnimatedNumber extends StatelessWidget {
+  const AnimatedNumber(
+    this.value, {
+    super.key,
+    required this.style,
+    this.format = fmtInt,
+    this.textAlign,
+  });
+  final double value;
+  final TextStyle style;
+  final String Function(num) format;
+  final TextAlign? textAlign;
+
+  @override
+  Widget build(BuildContext context) => Motion.tween(
+    context,
+    value: value,
+    builder: (v) => Text(format(v), style: style, textAlign: textAlign),
   );
 }
 
