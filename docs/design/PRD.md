@@ -7,7 +7,7 @@
 | Item | Detail |
 | --- | --- |
 | Product | SpotOn: AI personal trainer app |
-| Owner | Product owner and lead engineer (you) |
+| Owner | Product owner and lead engineer (Ravikumar Naduvin) |
 | Status | Approved for build: Phase 0 starts now |
 | Companion document | SpotOn — Technical PRD (architecture, APIs, data, CI/CD) |
 | Supersedes | App plans v1, v2, v3 and the Final Implementation Plan |

@@ -1,8 +1,8 @@
 # SpotOn mobile app (Flutter)
 
-Android and iOS app for SpotOn: log a meal by photo or text, see what's left today, ask the
+Android app for SpotOn (Flutter; the iOS project is generated but has never been built or tested): log a meal by photo or text, see what's left today, ask the
 coach, follow your progress. A thin client over the SpotOn API (`/v1`): all nutrition maths,
-rules and safety stay on the server. Plan and design decisions: [`docs/MOBILE_PLAN.md`](../docs/MOBILE_PLAN.md).
+rules and safety stay on the server. Plan and design decisions: [`docs/design/MOBILE_PLAN.md`](../docs/design/MOBILE_PLAN.md).
 
 - Flutter **3.50.0** / Dart 3.14, Material via the standalone `material_ui` package (3.50 deprecated the bundled one).
 - State: Riverpod · Navigation: go_router · HTTP: Dio · Charts: fl_chart · Font: Inter (bundled).
@@ -92,9 +92,11 @@ test/                                      unit, contract, widget and live end-t
 
 ## Before a store release (not done yet)
 
-- A release signing key and `applicationId` (currently `dev.spoton.spoton`); an app icon, splash screen and store listing.
-- A privacy policy page (required by both stores and for Health Connect), and a public `https://` server.
-- Password reset (needs an email service) or Sign in with Google / Apple.
-- Camera and photo flows are written with `image_picker` and are untested on a real device so far.
-- iOS: needs full Xcode, CocoaPods and an Apple Developer account. The iOS project is generated and configured, but not built.
-- Automatic steps (Health Connect / HealthKit) and reminders are PRD Phase 4.
+- A release signing key and your own `applicationId` (currently `dev.spoton.spoton`); a store listing.
+- A public `https://` server (see [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md)). A privacy policy page (`/privacy`),
+  change password and delete account already exist.
+- Password reset by email (needs an email service) or Sign in with Google / Apple.
+- Camera and photo flows use `image_picker` and are untested on a real device so far.
+- iOS: needs full Xcode, CocoaPods and an Apple Developer account. The iOS project is generated and configured, but
+  not built.
+- Automatic steps (Health Connect / HealthKit) and reminders are not built.

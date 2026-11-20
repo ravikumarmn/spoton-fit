@@ -1,8 +1,6 @@
 # SpotOn mobile app: plan summary (v1, 19 Nov 2026)
 
-Full plan with wireframes and the visual system: https://claude.ai/artifact/TAVGLU3ZF5gCUB7iAyjqKs (private; share it from the page if others need it).
-
-Status: **built (19 Nov 2026)**: the app in [`mobile/`](../mobile/README.md) implements the plan with the recommended choices
+Status: **built (19 Nov 2026)**: the app in [`mobile/`](../../mobile/README.md) implements the plan with the recommended choices
 (Flutter, Sage accent, Android first, name "SpotOn", API on the Mac over Wi-Fi). See "Implementation status" at the end.
 
 ## Decisions (proposed)

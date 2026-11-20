@@ -61,7 +61,7 @@ jobs:
       JWT_SECRET: ci-only-not-a-secret
       COACH_MEMORY: memory
       # Fixtures and widget tests in the server's time zone (SPOTON_TZ). One test depends on the
-      # device and server sharing a date; see "Known test gap" in docs/MOBILE_PLAN.md.
+      # device and server sharing a date; see "Known test gap" in docs/design/MOBILE_PLAN.md.
       TZ: Asia/Kolkata
     steps:
       - uses: actions/checkout@v4

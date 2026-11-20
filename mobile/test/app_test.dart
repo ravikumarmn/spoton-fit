@@ -152,7 +152,7 @@ void main() {
       final h = Harness(tester, api);
       await h.pump();
       await h.tapText('Get started');
-      await h.enter('Email', 'admin@gmail.com');
+      await h.enter('Email', 'admin@example.com');
       await h.enter('Password (at least 8 characters)', 'admin');
       await h.tapText('Create account');
       expect(

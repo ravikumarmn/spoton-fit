@@ -13,3 +13,8 @@ eval_results.json
 coach_eval_results.json
 .neon
 .DS_Store
+
+# Local AI-assistant tooling (not part of the project)
+.claude/
+.mcp.json
+skills-lock.json

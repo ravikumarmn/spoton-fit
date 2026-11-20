@@ -159,12 +159,17 @@ class BarsChart extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 40,
+                // Wide enough for "2,000" on one line (40 wrapped it to "2,00" / "0").
+                reservedSize: 52,
                 getTitlesWidget: (v, meta) => (v == meta.min || v == meta.max)
                     ? const SizedBox.shrink()
                     : SideTitleWidget(
                         meta: meta,
-                        child: Text(fmtInt(v), style: AppText.caption),
+                        child: Text(
+                          fmtInt(v),
+                          style: AppText.caption,
+                          softWrap: false,
+                        ),
                       ),
               ),
             ),

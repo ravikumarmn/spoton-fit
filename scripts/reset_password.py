@@ -4,7 +4,7 @@
 
 For the live database, get the URL from Secret Manager without printing it:
     DATABASE_URL="$(gcloud secrets versions access latest --secret spotonfit-database-url \\
-        --project spoton-fit-app)" PYTHONPATH=src .venv/bin/python scripts/reset_password.py someone@example.com
+        --project <your-gcp-project>)" PYTHONPATH=src .venv/bin/python scripts/reset_password.py someone@example.com
 
 Prints a random temporary password and signs the user out everywhere (all refresh tokens
 revoked). Send it to them privately; they sign in and change it under Me > Change password.

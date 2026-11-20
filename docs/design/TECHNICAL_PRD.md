@@ -16,7 +16,7 @@
 
 ## 1. Architecture overview
 
-![SpotOn architecture](tech_arch.png)
+*The diagram that was here showed the original plan (Streamlit first, Android later). The current architecture is in [`../ARCHITECTURE.md`](../ARCHITECTURE.md).*
 
 **Design principles**
 
