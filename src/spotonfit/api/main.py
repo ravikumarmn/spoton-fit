@@ -12,7 +12,6 @@ from contextlib import AsyncExitStack, asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
 
 from spotonfit import __version__
 from spotonfit.agents.activity import gemini_workout_parser
@@ -38,7 +37,6 @@ from spotonfit.api.routers import (
     suggestions,
     tracking,
 )
-from spotonfit.api.webapp import mount_webapp
 from spotonfit.config import settings
 from spotonfit.db import Database
 from spotonfit.observability import RequestContextMiddleware, setup_logging, setup_tracing
@@ -116,10 +114,6 @@ def create_app(db: Database | None = None) -> FastAPI:
     install_error_handlers(app)
     for r in (ops, legal, auth, profile, meals, foods, plans, tracking, progress, suggestions, coach, export):
         app.include_router(r.router)
-    # The web app goes last so every API route above wins. Compression is for its ~3 MB script
-    # (streamed coach replies, text/event-stream, are never compressed).
-    if mount_webapp(app, settings.web_dir):
-        app.add_middleware(GZipMiddleware, minimum_size=1024)
     return app
 
 

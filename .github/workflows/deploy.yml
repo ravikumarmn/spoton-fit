@@ -2,8 +2,7 @@ name: Deploy
 
 # After CI passes on main: build image -> push to Artifact Registry -> migrate (Neon) ->
 # Cloud Run -> smoke test /readyz -> build the signed Android APK that points at the new
-# server and attach it to a GitHub Release. The same Flutter app is also built for the browser
-# and served by the API at "/" (iPhone: Share > Add to Home Screen). A failing CI run never deploys.
+# server and attach it to a GitHub Release. A failing CI run never deploys.
 #
 # Off until the repository variable DEPLOY_ENABLED=true. One-time setup is in README "Deploy":
 #   variables: DEPLOY_ENABLED, GCP_PROJECT_ID, GCP_REGION, GCP_AR_REPO, CLOUD_RUN_SERVICE,
@@ -47,19 +46,6 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
       - uses: google-github-actions/setup-gcloud@v2
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.50.0"
-          channel: stable
-          cache: true
-      - name: Build the web app (the iPhone and browser version of the same Flutter app)
-        # Served by the API at "/", so it talks to the address it was loaded from. Everything is
-        # self-hosted (no CDN) so the app loads even where Google's CDN is blocked.
-        working-directory: mobile
-        run: |
-          flutter pub get
-          flutter build web --release --no-web-resources-cdn
-          cp -R build/web/. ../webapp/
       - name: Build and push image (tagged with the git SHA)
         run: |
           gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
@@ -109,12 +95,8 @@ jobs:
             --set-secrets DATABASE_URL=spotonfit-database-url:latest,JWT_SECRET=spotonfit-jwt-secret:latest
       - name: Smoke test
         run: |
-          for i in $(seq 1 20); do curl -fs "${{ steps.run.outputs.url }}/readyz" && break; sleep 3; done
-          curl -fs "${{ steps.run.outputs.url }}/readyz" > /dev/null
-          # The web app is served too (index page and its manifest).
-          curl -fs "${{ steps.run.outputs.url }}/" | grep -q "SpotOn"
-          curl -fs "${{ steps.run.outputs.url }}/manifest.json" | grep -q "SpotOn"
-          echo "Open on any phone: ${{ steps.run.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
+          for i in $(seq 1 20); do curl -fs "${{ steps.run.outputs.url }}/readyz" && exit 0; sleep 3; done
+          exit 1
 
   android:
     # The app build that testers install. It talks to the server deployed above.
