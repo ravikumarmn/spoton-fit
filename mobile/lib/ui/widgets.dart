@@ -44,13 +44,16 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Tonal surfaces: no border; a soft shadow separates the card from the background.
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSpace.radiusCard),
-      side: const BorderSide(color: AppColors.outline),
     );
     return Material(
       color: color ?? AppColors.surface,
       shape: shape,
+      elevation: color == null ? 1 : 0,
+      shadowColor: AppColors.shadow,
+      surfaceTintColor: Colors.transparent,
       clipBehavior: Clip.antiAlias,
       child: onTap == null
           ? Padding(padding: padding, child: child)
@@ -190,11 +193,8 @@ class AppChip extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: selected ? AppColors.container : AppColors.surface,
+                  color: selected ? AppColors.container : AppColors.surface2,
                   borderRadius: BorderRadius.circular(999),
-                  border: Border.all(
-                    color: selected ? AppColors.container : AppColors.outline,
-                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -390,8 +390,9 @@ class MacroBar extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(label, style: AppText.label)),
-                Flexible(
+                Flexible(child: Text(label, style: AppText.label)),
+                const SizedBox(width: 8),
+                Expanded(
                   child: Text(
                     detail,
                     style: AppText.caption,
@@ -424,24 +425,41 @@ class CalorieRing extends StatelessWidget {
     required this.eaten,
     required this.target,
     this.size = 96,
+    this.color = AppColors.primary,
+    this.stroke = 12,
+    this.child,
   });
-  final double eaten, target, size;
+  final double eaten, target, size, stroke;
+  final Color color;
+
+  /// Shown in the middle of the ring (scaled down to fit at large text sizes).
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) => SizedBox(
     width: size,
     height: size,
-    child: CustomPaint(painter: _RingPainter(target <= 0 ? 0 : eaten / target)),
+    child: CustomPaint(
+      painter: _RingPainter(target <= 0 ? 0 : eaten / target, color, stroke),
+      child: child == null
+          ? null
+          : Padding(
+              padding: EdgeInsets.all(stroke + 8),
+              child: Center(
+                child: FittedBox(fit: BoxFit.scaleDown, child: child),
+              ),
+            ),
+    ),
   );
 }
 
 class _RingPainter extends CustomPainter {
-  _RingPainter(this.fraction);
-  final double fraction;
+  _RingPainter(this.fraction, this.color, this.stroke);
+  final double fraction, stroke;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    const stroke = 12.0;
     final rect = Offset.zero & size;
     final arc = rect.deflate(stroke / 2);
     final track = Paint()
@@ -455,13 +473,14 @@ class _RingPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
         ..strokeWidth = stroke
-        ..color = fraction > 1 ? AppColors.amber : AppColors.primary;
+        ..color = fraction > 1 ? AppColors.amber : color;
       canvas.drawArc(arc, -math.pi / 2, math.pi * 2 * f, false, p);
     }
   }
 
   @override
-  bool shouldRepaint(_RingPainter old) => old.fraction != fraction;
+  bool shouldRepaint(_RingPainter old) =>
+      old.fraction != fraction || old.color != color || old.stroke != stroke;
 }
 
 // --- Messages --------------------------------------------------------------------------

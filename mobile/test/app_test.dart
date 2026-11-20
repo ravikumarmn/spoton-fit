@@ -255,13 +255,18 @@ void main() {
       expect(find.text('Calories left'), findsOneWidget);
       expect(find.text(fmtInt(t.leftKcal)), findsOneWidget);
       expect(
-        find.text(
-          '${fmtInt(t.targets.kcal)} target − ${fmtInt(t.eaten.kcal)} eaten',
-        ),
+        find.text('${fmtInt(t.targets.kcal)} − ${fmtInt(t.eaten.kcal)} eaten'),
         findsOneWidget,
       );
-      expect(find.text('Protein'), findsOneWidget);
-      expect(find.textContaining('62 left'), findsOneWidget);
+      // Protein left is the second focal number; the rest is quieter below.
+      expect(find.text('Protein left'), findsOneWidget);
+      expect(find.text(fmtInt(t.leftProteinG)), findsOneWidget);
+      expect(find.text('Carbs'), findsOneWidget);
+      final fatOver = t.eaten.fat - t.targets.fatG;
+      if (fatOver > 0) {
+        // over target is said in words (amber), not just a full bar
+        expect(find.text('${fmtInt(fatOver)} g over'), findsOneWidget);
+      }
       await h.reveal(find.text('Meals'));
       expect(find.text('Meals'), findsOneWidget);
       expect(

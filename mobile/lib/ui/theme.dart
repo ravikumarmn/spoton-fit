@@ -27,6 +27,7 @@ abstract final class AppColors {
   static const infoBg = Color(0xFFE8F1FA);
   static const error = Color(0xFFA3271F);
   static const errorBg = Color(0xFFFCECEA);
+  static const shadow = Color(0x331C2925); // card shadow (decorative)
 }
 
 abstract final class AppSpace {
