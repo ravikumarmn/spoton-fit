@@ -83,6 +83,11 @@ class MeScreen extends ConsumerWidget {
                 () => context.push('/me/data'),
               ),
               _Row(
+                'Appearance',
+                Icons.contrast,
+                () => showAppearanceSheet(context, ref),
+              ),
+              _Row(
                 'Change password',
                 Icons.lock_outline,
                 () => context.push('/me/password'),
@@ -162,7 +167,7 @@ class _Row extends StatelessWidget {
       label,
       style: AppText.body.copyWith(color: color ?? AppColors.text),
     ),
-    trailing: const Icon(Icons.chevron_right, color: AppColors.text3),
+    trailing: Icon(Icons.chevron_right, color: AppColors.text3),
     onTap: onTap,
   );
 }
@@ -447,10 +452,7 @@ class MyFoodsScreen extends ConsumerWidget {
                     color: AppColors.errorBg,
                     borderRadius: BorderRadius.circular(AppSpace.radiusCard),
                   ),
-                  child: const Icon(
-                    Icons.delete_outline,
-                    color: AppColors.error,
-                  ),
+                  child: Icon(Icons.delete_outline, color: AppColors.error),
                 ),
                 onDismissed: (_) => _save(context, ref, [...list]..remove(f)),
                 child: AppCard(
@@ -936,6 +938,52 @@ class _DataScreenState extends ConsumerState<DataScreen> {
   );
 }
 
+/// Light, dark, or follow the phone's setting.
+Future<void> showAppearanceSheet(BuildContext context, WidgetRef ref) =>
+    showAppSheet<void>(
+      context,
+      builder: (sheet) => Consumer(
+        builder: (context, ref, _) {
+          Widget option(ThemeMode m, String label, String detail) =>
+              RadioListTile<ThemeMode>(
+                value: m,
+                title: Text(label, style: AppText.body),
+                subtitle: Text(detail, style: AppText.caption),
+              );
+          return RadioGroup<ThemeMode>(
+            groupValue: ref.watch(appearanceProvider),
+            onChanged: (v) async {
+              if (v == null) return;
+              await ref.read(appearanceProvider.notifier).set(v);
+              if (sheet.mounted) Navigator.pop(sheet);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Text('Appearance', style: AppText.section),
+                ),
+                option(
+                  ThemeMode.system,
+                  'Same as phone',
+                  'Light or dark, following your phone',
+                ),
+                option(ThemeMode.light, 'Light', 'Always light'),
+                option(
+                  ThemeMode.dark,
+                  'Dark',
+                  'Always dark: easier on the eyes at night',
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
 /// Opens the server's privacy policy page (GET /privacy) in the browser.
 Future<void> openPrivacyPolicy(BuildContext context, WidgetRef ref) async {
   final base = ref.read(serverUrlProvider).replaceAll(RegExp(r'/+$'), '');
@@ -1193,7 +1241,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
             foregroundColor: AppColors.onPrimary,
           ),
           child: _busy
-              ? const SizedBox(
+              ? SizedBox(
                   width: 22,
                   height: 22,
                   child: CircularProgressIndicator(

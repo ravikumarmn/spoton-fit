@@ -10,6 +10,7 @@ import 'package:spoton/core/api_error.dart';
 import 'package:spoton/core/models.dart';
 import 'package:spoton/core/providers.dart';
 import 'package:spoton/ui/format.dart';
+import 'package:spoton/ui/theme.dart';
 import 'package:spoton/features/log/log_state.dart';
 import 'package:spoton/features/onboarding/onboarding.dart' show explainPlan;
 import 'package:spoton/features/me/me_screens.dart';
@@ -597,6 +598,30 @@ void main() {
       expect(find.text('Edit meal'), findsOneWidget);
       await h.tapText('Save changes');
       expect(api.calls.any((c) => c.startsWith('updateMeal:')), isTrue);
+    });
+  });
+
+  group('appearance', () {
+    testWidgets('choosing Dark switches the whole app and is remembered', (
+      tester,
+    ) async {
+      final h = Harness(tester, FakeApi());
+      await h.pump();
+      Color background() =>
+          tester
+              .widget<Scaffold>(find.byType(Scaffold).hitTestable().first)
+              .backgroundColor ??
+          Theme.of(tester.element(find.byType(Scaffold).first))
+              .scaffoldBackgroundColor;
+      expect(background(), AppPalette.light.bg);
+      await h.tapText('Me');
+      await h.tapText('Appearance');
+      await h.tapText('Dark');
+      expect(background(), AppPalette.dark.bg);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(Scaffold).first),
+      );
+      expect(container.read(prefsProvider).getString('appearance'), 'dark');
     });
   });
 

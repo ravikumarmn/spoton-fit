@@ -19,50 +19,45 @@ double contrast(Color a, Color b) {
 
 void main() {
   // (name, foreground, background, minimum ratio): 4.5 for text, 3.0 for graphics.
-  final pairs = <(String, Color, Color, double)>[
-    ('button label on primary', AppColors.onPrimary, AppColors.primary, 4.5),
-    ('primary text on surface', AppColors.primary, AppColors.surface, 4.5),
-    ('primary text on background', AppColors.primary, AppColors.bg, 4.5),
-    (
-      'on-container on container',
-      AppColors.onContainer,
-      AppColors.container,
-      4.5,
-    ),
-    ('text on background', AppColors.text, AppColors.bg, 4.5),
-    ('secondary text on surface', AppColors.text2, AppColors.surface, 4.5),
-    ('secondary text on background', AppColors.text2, AppColors.bg, 4.5),
-    ('tertiary text on surface', AppColors.text3, AppColors.surface, 4.5),
-    ('warning text on warning bg', AppColors.warn, AppColors.warnBg, 4.5),
-    ('warning text on surface', AppColors.warn, AppColors.surface, 4.5),
-    ('info text on info bg', AppColors.info, AppColors.infoBg, 4.5),
-    ('error text on error bg', AppColors.error, AppColors.errorBg, 4.5),
-    ('error text on surface', AppColors.error, AppColors.surface, 4.5),
-    ('error text on background', AppColors.error, AppColors.bg, 4.5),
-    ('text on snackbar', AppColors.surface, AppColors.text, 4.5),
-    (
-      'label on surface-2 (segmented)',
-      AppColors.text2,
-      AppColors.surface2,
-      4.5,
-    ),
-    ('protein bar on track', AppColors.protein, AppColors.track, 3.0),
-    ('carbs bar on track', AppColors.carbs, AppColors.track, 3.0),
-    ('fat bar on track', AppColors.fat, AppColors.track, 3.0),
-    ('water bar on track', AppColors.water, AppColors.track, 3.0),
-    ('ring on track', AppColors.primary, AppColors.track, 3.0),
-    ('over-target ring on track', AppColors.amber, AppColors.track, 3.0),
-    ('input border on surface', AppColors.input, AppColors.surface, 3.0),
+  List<(String, Color, Color, double)> pairsFor(AppPalette p) => [
+    ('button label on primary', p.onPrimary, p.primary, 4.5),
+    ('primary text on surface', p.primary, p.surface, 4.5),
+    ('primary text on background', p.primary, p.bg, 4.5),
+    ('on-container on container', p.onContainer, p.container, 4.5),
+    ('text on background', p.text, p.bg, 4.5),
+    ('secondary text on surface', p.text2, p.surface, 4.5),
+    ('secondary text on background', p.text2, p.bg, 4.5),
+    ('tertiary text on surface', p.text3, p.surface, 4.5),
+    ('warning text on warning bg', p.warn, p.warnBg, 4.5),
+    ('warning text on surface', p.warn, p.surface, 4.5),
+    ('info text on info bg', p.info, p.infoBg, 4.5),
+    ('error text on error bg', p.error, p.errorBg, 4.5),
+    ('error text on surface', p.error, p.surface, 4.5),
+    ('error text on background', p.error, p.bg, 4.5),
+    ('text on snackbar', p.surface, p.text, 4.5),
+    ('label on surface-2 (segmented)', p.text2, p.surface2, 4.5),
+    ('protein bar on track', p.protein, p.track, 3.0),
+    ('carbs bar on track', p.carbs, p.track, 3.0),
+    ('fat bar on track', p.fat, p.track, 3.0),
+    ('water bar on track', p.water, p.track, 3.0),
+    ('ring on track', p.primary, p.track, 3.0),
+    ('over-target ring on track', p.amber, p.track, 3.0),
+    ('input border on surface', p.input, p.surface, 3.0),
   ];
 
-  for (final (name, fg, bg, min) in pairs) {
-    test('contrast: $name >= $min:1', () {
-      expect(
-        contrast(fg, bg),
-        greaterThanOrEqualTo(min),
-        reason: '${contrast(fg, bg).toStringAsFixed(2)}:1',
-      );
-    });
+  for (final (mode, palette) in [
+    ('light', AppPalette.light),
+    ('dark', AppPalette.dark),
+  ]) {
+    for (final (name, fg, bg, min) in pairsFor(palette)) {
+      test('contrast ($mode): $name >= $min:1', () {
+        expect(
+          contrast(fg, bg),
+          greaterThanOrEqualTo(min),
+          reason: '${contrast(fg, bg).toStringAsFixed(2)}:1',
+        );
+      });
+    }
   }
 
   test('the contrast helper matches known WCAG values', () {
@@ -77,9 +72,12 @@ void main() {
   });
 
   test('theme uses Inter and 48 dp minimum buttons', () {
-    final t = buildTheme();
+    final t = buildTheme(AppPalette.light);
     expect(t.textTheme.bodyLarge!.fontFamily, 'Inter');
-    expect(t.colorScheme.primary, AppColors.primary);
+    expect(t.colorScheme.primary, AppPalette.light.primary);
+    final d = buildTheme(AppPalette.dark);
+    expect(d.brightness, Brightness.dark);
+    expect(d.scaffoldBackgroundColor, AppPalette.dark.bg);
     expect(
       t.filledButtonTheme.style!.minimumSize!.resolve({})!.height,
       AppSpace.minTap,

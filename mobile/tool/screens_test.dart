@@ -102,6 +102,7 @@ void main() {
         find.byType(TextField).first,
         '6 boiled eggs and 3 puris',
       );
+      await tester.pump(); // the Analyze button enables after typing
       await tester.tap(find.text('Analyze'));
       await settle(tester);
       await shot(tester, 'review');

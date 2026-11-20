@@ -94,7 +94,7 @@ class _BottomBar extends StatelessWidget {
         color: AppColors.surface,
         elevation: 0,
         child: DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(top: BorderSide(color: AppColors.outline)),
           ),
           child: SafeArea(
@@ -121,7 +121,7 @@ class _BottomBar extends StatelessWidget {
                               child: InkWell(
                                 customBorder: const CircleBorder(),
                                 onTap: onAdd,
-                                child: const SizedBox(
+                                child: SizedBox(
                                   width: 56,
                                   height: 56,
                                   child: Icon(

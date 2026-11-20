@@ -253,7 +253,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               contentPadding: EdgeInsets.zero,
               title: Text(slotLabel(s), style: AppText.body),
               trailing: s == current
-                  ? const Icon(Icons.check, color: AppColors.primary)
+                  ? Icon(Icons.check, color: AppColors.primary)
                   : null,
               onTap: () => Navigator.pop(ctx, s),
             ),
@@ -421,7 +421,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.surface,
                   border: Border(top: BorderSide(color: AppColors.outline)),
                 ),

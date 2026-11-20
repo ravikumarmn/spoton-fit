@@ -115,11 +115,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
         padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
         child: Column(
           children: [
-            const Icon(
-              Icons.restaurant,
-              size: 40,
-              color: AppColors.onContainer,
-            ),
+            Icon(Icons.restaurant, size: 40, color: AppColors.onContainer),
             const SizedBox(height: 12),
             Text(
               'Fit the whole plate in the photo',

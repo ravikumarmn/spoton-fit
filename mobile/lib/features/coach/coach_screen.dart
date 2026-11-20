@@ -230,9 +230,9 @@ class _Bubble extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: width),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(18),
                 topRight: Radius.circular(18),
                 bottomLeft: Radius.circular(18),
@@ -295,7 +295,7 @@ class _Bubble extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.favorite_border,
                               size: 16,
                               color: AppColors.info,

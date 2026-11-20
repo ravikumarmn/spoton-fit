@@ -25,80 +25,86 @@ class WeightChart extends StatelessWidget {
       for (final p in points)
         if (p.kg != null) FlSpot(x(p.day), p.kg!),
     ];
-    return SizedBox(
-      height: 180,
-      child: LineChart(
-        LineChartData(
-          minY: lo,
-          maxY: hi,
-          lineTouchData: const LineTouchData(enabled: false),
-          gridData: const FlGridData(
-            drawVerticalLine: false,
-            getDrawingHorizontalLine: _gridLine,
-          ),
-          borderData: FlBorderData(show: false),
-          titlesData: FlTitlesData(
-            topTitles: const AxisTitles(),
-            rightTitles: const AxisTitles(),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 36,
-                getTitlesWidget: (v, meta) => (v == meta.min || v == meta.max)
-                    ? const SizedBox.shrink()
-                    : SideTitleWidget(
-                        meta: meta,
-                        child: Text(
-                          v.round().toString(),
-                          style: AppText.caption,
-                        ),
-                      ),
-              ),
+    // Right padding: the last date label ("20 Nov") would otherwise be cut off.
+    return Padding(
+      padding: const EdgeInsets.only(right: 16),
+      child: SizedBox(
+        height: 180,
+        child: LineChart(
+          LineChartData(
+            minY: lo,
+            maxY: hi,
+            lineTouchData: const LineTouchData(enabled: false),
+            gridData: const FlGridData(
+              drawVerticalLine: false,
+              getDrawingHorizontalLine: _gridLine,
             ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 24,
-                interval: (x(points.last.day) / 3).clamp(1, 1000).toDouble(),
-                getTitlesWidget: (v, meta) => SideTitleWidget(
-                  meta: meta,
-                  child: Text(
-                    shortDate(first.add(Duration(days: v.round()))),
-                    style: AppText.caption,
+            borderData: FlBorderData(show: false),
+            titlesData: FlTitlesData(
+              topTitles: const AxisTitles(),
+              rightTitles: const AxisTitles(),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  // A narrow range (a flat trend) needs a decimal, or labels repeat ("92, 92").
+                  getTitlesWidget: (v, meta) => (v == meta.min || v == meta.max)
+                      ? const SizedBox.shrink()
+                      : SideTitleWidget(
+                          meta: meta,
+                          child: Text(
+                            hi - lo <= 4
+                                ? v.toStringAsFixed(1)
+                                : v.round().toString(),
+                            style: AppText.caption,
+                          ),
+                        ),
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 24,
+                  interval: (x(points.last.day) / 3).clamp(1, 1000).toDouble(),
+                  getTitlesWidget: (v, meta) => SideTitleWidget(
+                    meta: meta,
+                    child: Text(
+                      shortDate(first.add(Duration(days: v.round()))),
+                      style: AppText.caption,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: dots,
-              barWidth: 0,
-              color: AppColors.input,
-              dotData: FlDotData(
-                getDotPainter: (_, _, _, _) => FlDotCirclePainter(
-                  radius: 2.5,
-                  color: AppColors.input,
-                  strokeWidth: 0,
+            lineBarsData: [
+              LineChartBarData(
+                spots: dots,
+                barWidth: 0,
+                color: AppColors.input,
+                dotData: FlDotData(
+                  getDotPainter: (_, _, _, _) => FlDotCirclePainter(
+                    radius: 2.5,
+                    color: AppColors.input,
+                    strokeWidth: 0,
+                  ),
                 ),
               ),
-            ),
-            LineChartBarData(
-              spots: trend,
-              barWidth: 3,
-              color: AppColors.primary,
-              isStrokeCapRound: true,
-              dotData: const FlDotData(show: false),
-            ),
-          ],
+              LineChartBarData(
+                spots: trend,
+                barWidth: 3,
+                color: AppColors.primary,
+                isStrokeCapRound: true,
+                dotData: const FlDotData(show: false),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-FlLine _gridLine(double _) =>
-    const FlLine(color: AppColors.track, strokeWidth: 1);
+FlLine _gridLine(double _) => FlLine(color: AppColors.track, strokeWidth: 1);
 
 /// Bars per day/week/month with a dashed target line. Days without logs show no bar.
 class BarsChart extends StatelessWidget {

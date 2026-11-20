@@ -108,7 +108,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = loading
-        ? const SizedBox(
+        ? SizedBox(
             width: 22,
             height: 22,
             child: CircularProgressIndicator(
@@ -425,12 +425,14 @@ class CalorieRing extends StatelessWidget {
     required this.eaten,
     required this.target,
     this.size = 96,
-    this.color = AppColors.primary,
+    this.color,
     this.stroke = 12,
     this.child,
   });
   final double eaten, target, size, stroke;
-  final Color color;
+
+  /// Defaults to the primary colour of the active palette.
+  final Color? color;
 
   /// Shown in the middle of the ring (scaled down to fit at large text sizes).
   final Widget? child;
@@ -440,7 +442,11 @@ class CalorieRing extends StatelessWidget {
     width: size,
     height: size,
     child: CustomPaint(
-      painter: _RingPainter(target <= 0 ? 0 : eaten / target, color, stroke),
+      painter: _RingPainter(
+        target <= 0 ? 0 : eaten / target,
+        color ?? AppColors.primary,
+        stroke,
+      ),
       child: child == null
           ? null
           : Padding(

@@ -142,7 +142,7 @@ class _ReviewCardState extends ConsumerState<_ReviewCard> {
           return AppCard(
             child: Row(
               children: [
-                const Icon(Icons.event_outlined, color: AppColors.text2),
+                Icon(Icons.event_outlined, color: AppColors.text2),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -374,7 +374,7 @@ class _MaintenanceCard extends StatelessWidget {
             textAlign: TextAlign.end,
           ),
         ),
-        const Icon(Icons.chevron_right, color: AppColors.text3),
+        Icon(Icons.chevron_right, color: AppColors.text3),
       ],
     ),
   );

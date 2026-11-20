@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api/http_api.dart';
@@ -26,6 +27,27 @@ const _defaultServer = String.fromEnvironment(
 
 /// The SpotOn server address. On the Android emulator, 10.0.2.2 is the host computer;
 /// on a real phone use the computer's Wi-Fi address (e.g. http://192.168.1.20:8000).
+/// Light, dark or follow the phone (Me › Appearance). Stored on the device.
+class Appearance extends Notifier<ThemeMode> {
+  static const _key = 'appearance';
+
+  @override
+  ThemeMode build() => switch (ref.watch(prefsProvider).getString(_key)) {
+    'light' => ThemeMode.light,
+    'dark' => ThemeMode.dark,
+    _ => ThemeMode.system,
+  };
+
+  Future<void> set(ThemeMode mode) async {
+    await ref.read(prefsProvider).setString(_key, mode.name);
+    state = mode;
+  }
+}
+
+final appearanceProvider = NotifierProvider<Appearance, ThemeMode>(
+  Appearance.new,
+);
+
 class ServerUrl extends Notifier<String> {
   static const _key = 'server_url';
 

@@ -101,7 +101,7 @@ class _Body extends ConsumerWidget {
             onTap: () => context.go('/progress'),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.event_available_outlined,
                   color: AppColors.onContainer,
                 ),
@@ -125,7 +125,7 @@ class _Body extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: AppColors.onContainer),
+                Icon(Icons.chevron_right, color: AppColors.onContainer),
               ],
             ),
           ),
@@ -351,7 +351,7 @@ class _MealCard extends ConsumerWidget {
           color: AppColors.errorBg,
           borderRadius: BorderRadius.circular(AppSpace.radiusCard),
         ),
-        child: const Icon(Icons.delete_outline, color: AppColors.error),
+        child: Icon(Icons.delete_outline, color: AppColors.error),
       ),
       onDismissed: (_) {
         onHide(meal.id);
@@ -376,7 +376,7 @@ class _MealCard extends ConsumerWidget {
                       ),
                       if (meal.isFavourite) ...[
                         const SizedBox(width: 6),
-                        const Icon(
+                        Icon(
                           Icons.star,
                           size: 16,
                           color: AppColors.amber,
