@@ -28,6 +28,7 @@ from spotonfit.api.routers import (
     coach,
     export,
     foods,
+    legal,
     meals,
     ops,
     plans,
@@ -111,7 +112,7 @@ def create_app(db: Database | None = None) -> FastAPI:
     app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_methods=["*"], allow_headers=["*"])
     app.add_middleware(RequestContextMiddleware)  # added last = outermost: wraps CORS and errors
     install_error_handlers(app)
-    for r in (ops, auth, profile, meals, foods, plans, tracking, progress, suggestions, coach, export):
+    for r in (ops, legal, auth, profile, meals, foods, plans, tracking, progress, suggestions, coach, export):
         app.include_router(r.router)
     return app
 

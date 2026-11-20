@@ -34,19 +34,19 @@
   "water_ml": 500,
   "steps": 3900,
   "workout_min": 30.0,
-  "burned_kcal_est": 827.0,
+  "burned_kcal_est": 848.0,
   "nudges": [],
   "meals": [
     {
-      "id": "e9a8a1dd-40b4-47d1-b037-443cf8254643",
-      "eaten_at": "2026-11-19T23:59:42.479517Z",
+      "id": "ce1c9457-13bf-48d5-8faf-60818e4d798c",
+      "eaten_at": "2026-11-20T00:15:35.674721Z",
       "slot": "breakfast",
       "note": null,
       "source": "text",
       "is_favourite": true,
       "items": [
         {
-          "id": "271ac7fa-14f1-44f1-a5c2-abc1cdd53061",
+          "id": "93bd22d3-0442-4577-9334-a25c8f577009",
           "name": "boiled egg",
           "quantity": 6.0,
           "unit": "piece",
@@ -68,7 +68,7 @@
           }
         },
         {
-          "id": "78d9cdba-5aa5-457a-b1ab-a44d976225f6",
+          "id": "9f6d86e1-7e3e-4b96-9e86-331c6795028f",
           "name": "puri",
           "quantity": 3.0,
           "unit": "piece",
@@ -99,15 +99,15 @@
       }
     },
     {
-      "id": "ecf2bc80-53a1-4832-ae0d-9ddb7165c129",
-      "eaten_at": "2026-11-19T23:59:42.512176Z",
+      "id": "fb766ea8-9394-47bf-a21e-a1e6194c1004",
+      "eaten_at": "2026-11-20T00:15:35.728532Z",
       "slot": "snack",
       "note": null,
       "source": "text",
       "is_favourite": false,
       "items": [
         {
-          "id": "dd9282f3-e58f-499a-b046-df4955e1d733",
+          "id": "a0b49064-b51b-44d1-bcbe-f4e00abd12ad",
           "name": "boiled egg",
           "quantity": 6.0,
           "unit": "piece",
@@ -140,7 +140,7 @@
   ],
   "weekly_review": {
     "review": {
-      "id": "9cf6940d-383e-4a27-b115-b297b77d6f42",
+      "id": "1611c3b3-f65f-45c1-bedb-a682e2f4d449",
       "week_start": "2026-11-08",
       "summary": {
         "week_start": "2026-11-08",

@@ -1,13 +1,13 @@
 {
-  "id": "e9a8a1dd-40b4-47d1-b037-443cf8254643",
-  "eaten_at": "2026-11-19T23:59:42.479517Z",
+  "id": "ce1c9457-13bf-48d5-8faf-60818e4d798c",
+  "eaten_at": "2026-11-20T00:15:35.674721Z",
   "slot": "breakfast",
   "note": null,
   "source": "text",
   "is_favourite": true,
   "items": [
     {
-      "id": "271ac7fa-14f1-44f1-a5c2-abc1cdd53061",
+      "id": "93bd22d3-0442-4577-9334-a25c8f577009",
       "name": "boiled egg",
       "quantity": 6.0,
       "unit": "piece",
@@ -29,7 +29,7 @@
       }
     },
     {
-      "id": "78d9cdba-5aa5-457a-b1ab-a44d976225f6",
+      "id": "9f6d86e1-7e3e-4b96-9e86-331c6795028f",
       "name": "puri",
       "quantity": 3.0,
       "unit": "piece",

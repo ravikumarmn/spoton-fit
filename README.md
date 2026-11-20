@@ -191,16 +191,16 @@ All errors use one envelope: `{"error": {"code", "message", "request_id"}}`. Eve
 
 | Area | Endpoints |
 | --- | --- |
-| Ops (public) | `GET /healthz` · `GET /readyz` |
-| Auth | `POST /v1/auth/register` · `/login` (JSON) · `/token` (form, Swagger) · `/refresh` · `/logout` · `GET /v1/me` |
+| Ops (public) | `GET /healthz` · `GET /readyz` · `GET /privacy` (privacy policy page; contact from `PRIVACY_CONTACT`) |
+| Auth | `POST /v1/auth/register` · `/login` (JSON) · `/token` (form, Swagger) · `/refresh` · `/logout` · `GET /v1/me` · `POST /v1/account/password` · `DELETE /v1/account` |
 | Profile | `GET/PUT /v1/profile` · `GET /v1/targets` |
 | Meals | `POST /v1/meals/analyze` · `POST /v1/meals` (`Idempotency-Key` header) · `GET /v1/meals?date=` · `GET /v1/meals/recent` · `GET /v1/meals/favourites` · `GET/PATCH/DELETE /v1/meals/{id}` · `POST /v1/meals/{id}/repeat` · `POST /v1/meals/{id}/photo` |
 | Food memory | `GET /v1/food-memory` · `DELETE /v1/food-memory/{id}` (your corrected per-unit values, reused next time) |
 | Data | `GET /v1/export?format=json\|csv` (everything you logged; CSV comes as a ZIP) |
-| Tracking | `POST /v1/water` · `PUT /v1/steps/{date}` · `POST /v1/weights` · `POST /v1/workouts` · `GET /v1/today?date=` · `GET /v1/history?period=&from=&to=` |
+| Tracking | `POST /v1/water` · `PUT /v1/steps/{date}` · `POST /v1/weights` · `POST /v1/workouts` (water, weights and workouts take an optional `day`; future days are refused) · `GET /v1/today?date=` (with the day's meals and, for today, the weekly review) · `GET /v1/history?period=&from=&to=` |
 | My Foods & rules | `GET/PUT /v1/my-foods` · `POST /v1/rules/parse` (plain English → rule, not saved) · `POST /v1/rules` · `GET /v1/rules` (with today's status) · `DELETE /v1/rules/{id}` |
 | Progress | `GET /v1/progress` · `GET /v1/reviews/weekly` · `GET /v1/reviews` · `POST /v1/reviews/{id}/decision` (`accept`\|`reject`) · `POST/GET /v1/measurements` |
-| AI | `GET /v1/suggestions?mode=my_foods\|ideal` · `POST /v1/coach/messages` (JSON, or SSE with `Accept: text/event-stream`) · `GET /v1/coach/threads/{date}` |
+| AI | `GET /v1/suggestions?mode=my_foods\|ideal` · `POST /v1/coach/messages` (JSON, or SSE with `Accept: text/event-stream`) · `GET /v1/coach/threads/{date}` · `GET/PUT /v1/coach/notes` (remembered across days) |
 
 **Progress (how the numbers are made).** Weeks run Sunday to Saturday (`WEEK_STARTS_ON`). For every finished week, `services/progress.py` does two things.
 
@@ -216,11 +216,11 @@ Reviews are generated when you open the app (idempotent) and by the weekly job `
 
 **Coach streaming (SSE).** With `Accept: text/event-stream`, the coach sends `event: status` (it's checking something, e.g. `get_today`), then `event: token` chunks, then `event: done` with the full reply. Errors arrive as `event: error`.
 
-**Safety.** Before the model sees a message, `agents/safety.py` checks it against configured phrases (`config.SafetyPolicy`): red-flag symptoms get a "see a doctor / call 112" reply, and signs of disordered eating or self-harm get a supportive reply with the Tele-MANAS helpline (14416). The model is never asked for diet advice in those cases. The calorie floor is enforced in code (`core/targets.py`).
+**Safety.** Before the coach model sees a message, `agents/safety.py` checks it against configured phrases (`config.SafetyPolicy`): red-flag symptoms get a "see a doctor / call 112" reply, and signs of disordered eating or self-harm get a supportive reply with the Tele-MANAS helpline (14416). A red-flag match is then confirmed by the small model, so "no chest pain today" or "my dad had chest pain" gets a normal reply; if that check fails or takes over 6 s, the safety reply still goes out. Self-harm and eating-disorder matches are never second-guessed. The calorie floor is enforced in code (`core/targets.py`).
 
 **Sessions.** The access token is a 15-minute JWT (`iss`, `aud` and `jti` are checked). The refresh token is opaque, stored only as a SHA-256 hash, and **rotates on every refresh**. Replaying an old refresh token revokes that whole login session. Logout revokes the session.
 
-**Rate limits** (per process, configurable):
+**Rate limits** (counted in memory per process, so production runs one instance with one process; configurable):
 - Login/token/register: 5 per minute per IP.
 - AI endpoints: 30 per minute and 100 per day per user.
 - Everything else: 120 per minute per user.
@@ -252,7 +252,7 @@ Coach evals (`evals/data/coach_cases.jsonl`) cover five kinds of case:
 
 They run against a seeded user with a known day. The graders are simple substring checks, so read `coach_eval_results.json` after a live run and tighten the cases.
 
-The eval ground truth in `evals/data/text_meals.jsonl` is **approximate**: it was computed from the old seed table, not weighed. To get a real accuracy number, replace it with meals you weigh yourself, with nutrition from IFCT or the package label.
+The eval ground truth in `evals/data/text_meals.jsonl` is **approximate**: it was computed from the old seed table, not weighed. To get a real accuracy number, build a weighed set: [`evals/WEIGHED_MEALS.md`](evals/WEIGHED_MEALS.md) explains how to weigh, look up IFCT 2017 values and run it.
 
 ## 6. Deploy (Cloud Run + Neon, on every push to `main`)
 
@@ -303,6 +303,10 @@ See [`mobile/README.md`](mobile/README.md) to run it and build an APK, and [`doc
 For a phone on your Wi-Fi, start the API with `--host 0.0.0.0` and enter your computer's address in the app.
 The API also gained `DELETE /v1/account` (needs the password; removes everything, including the coach's saved conversations), which the stores require.
 
+**The Streamlit web app is frozen** as a developer and admin tool. New features go into the Flutter app only.
+
+**Locked-out user?** There's no email reset yet. Run `scripts/reset_password.py <email>` against the database (the command for the live one is in the script); it prints a temporary password and signs them out everywhere. They change it under **Me › Change password**.
+
 ## 9. Troubleshooting
 
 | Symptom | Fix |
@@ -316,11 +320,11 @@ The API also gained `DELETE /v1/account` (needs the password; removes everything
 | Web app says "Can't reach the SpotOn API" | Start the API (terminal 1), or set `SPOTON_API_URL` |
 | Web app asks to sign in after a page refresh | Expected for now: the session lives in the browser tab (see Known limits) |
 
-### Known limits (v0.6.0)
+### Known limits (v0.7.0)
 
 - **Web sign-in lasts for the browser tab.** It doesn't persist across refreshes, because Streamlit can't set secure cookies. A persistent login comes with the Android/web client work.
-- **Coach memory** lasts within a day (one thread per day). Across days, the coach knows your preferences through My Foods, rules and your profile; free-form notes ("remember I'm vegetarian on Tuesdays") aren't stored yet.
-- **Safety routing** uses phrase matching. It's cautious (it may also trigger on "no chest pain"), and it can miss phrasings it doesn't know; extend `SAFETY__*_TERMS`.
+- **Coach memory** lasts within a day (one thread per day). Across days, the coach uses My Foods, rules, your profile and your **coach notes** (Me › Coach notes, e.g. "vegetarian on Tuesdays").
+- **Safety routing** starts from phrase matching, so it can miss phrasings it doesn't know; extend `SAFETY__*_TERMS`. Negated mentions are handled by the model check (above).
 - **The Postgres checkpointer** is wired and configured but has only been tested against SQLite here (no local Postgres).
 - **Learned maintenance needs history.** A new user's first estimates lag the real weight trend, because there are no earlier weigh-ins to warm the trend up. The 70/30 blend and the 100 kcal weekly cap keep this from swinging targets.
 - **Weekly reviews** use your current profile for past weeks. If you changed your goal mid-way, older reviews are recomputed against the new goal only for weeks not yet reviewed.

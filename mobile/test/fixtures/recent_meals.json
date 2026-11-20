@@ -1,14 +1,14 @@
 [
   {
-    "id": "ecf2bc80-53a1-4832-ae0d-9ddb7165c129",
-    "eaten_at": "2026-11-19T23:59:42.512176Z",
+    "id": "fb766ea8-9394-47bf-a21e-a1e6194c1004",
+    "eaten_at": "2026-11-20T00:15:35.728532Z",
     "slot": "snack",
     "note": null,
     "source": "text",
     "is_favourite": false,
     "items": [
       {
-        "id": "dd9282f3-e58f-499a-b046-df4955e1d733",
+        "id": "a0b49064-b51b-44d1-bcbe-f4e00abd12ad",
         "name": "boiled egg",
         "quantity": 6.0,
         "unit": "piece",
@@ -39,15 +39,15 @@
     }
   },
   {
-    "id": "e9a8a1dd-40b4-47d1-b037-443cf8254643",
-    "eaten_at": "2026-11-19T23:59:42.479517Z",
+    "id": "ce1c9457-13bf-48d5-8faf-60818e4d798c",
+    "eaten_at": "2026-11-20T00:15:35.674721Z",
     "slot": "breakfast",
     "note": null,
     "source": "text",
     "is_favourite": true,
     "items": [
       {
-        "id": "271ac7fa-14f1-44f1-a5c2-abc1cdd53061",
+        "id": "93bd22d3-0442-4577-9334-a25c8f577009",
         "name": "boiled egg",
         "quantity": 6.0,
         "unit": "piece",
@@ -69,7 +69,7 @@
         }
       },
       {
-        "id": "78d9cdba-5aa5-457a-b1ab-a44d976225f6",
+        "id": "9f6d86e1-7e3e-4b96-9e86-331c6795028f",
         "name": "puri",
         "quantity": 3.0,
         "unit": "piece",
@@ -100,7 +100,7 @@
     }
   },
   {
-    "id": "d7601282-4ee8-4cf6-8cd3-773d4ec9c2f9",
+    "id": "41b35f8c-353d-442b-9e0f-f798e75df4f1",
     "eaten_at": "2026-11-19T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -108,7 +108,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "e00f8055-a00e-4822-8f93-a705b7829665",
+        "id": "aca975c0-a02f-45a9-acf3-659112d6be7f",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -139,7 +139,7 @@
     }
   },
   {
-    "id": "2ea64041-2b34-4898-bb9a-7fd8a17fd664",
+    "id": "c3c452e2-33fe-4622-8adb-539f6ce14b4f",
     "eaten_at": "2026-11-18T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -147,7 +147,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "7765dbc5-3fda-4708-99d4-88c0e6013b96",
+        "id": "599e6a94-5d05-4b2b-9bc6-8b4ba1609e72",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -178,7 +178,7 @@
     }
   },
   {
-    "id": "2930f5b5-0a7e-4770-96f6-4e8d5c2e1885",
+    "id": "9609be9d-029a-421c-bbc9-2d07cb1178f7",
     "eaten_at": "2026-11-17T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -186,7 +186,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "571070b6-3ca4-4430-88c4-3277091936ab",
+        "id": "27cd78c9-fc5f-41c0-9e0f-788d3f1e2ab7",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -217,7 +217,7 @@
     }
   },
   {
-    "id": "be5489bf-bcdb-49d3-a1c4-549d36c8a1f2",
+    "id": "3e120b5d-2553-4b2c-917f-287b2d912ae6",
     "eaten_at": "2026-11-16T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -225,7 +225,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "bfebf50c-0419-4fa9-b88f-d3ce374cf98c",
+        "id": "b7d6b235-04d1-49fd-a303-62cba9fd4606",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -256,7 +256,7 @@
     }
   },
   {
-    "id": "c3ab602e-cadc-4d3c-b4f6-0f3fb6ecbfed",
+    "id": "088299a8-a1c2-4a74-bd2e-18079235270f",
     "eaten_at": "2026-11-15T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -264,7 +264,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "a68ca17c-465e-44fa-9400-38835f7ed817",
+        "id": "359516c4-611d-450b-9518-5029a2c5b6d4",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -295,7 +295,7 @@
     }
   },
   {
-    "id": "9fd0c75c-2ed8-49da-b9df-8389b25dd085",
+    "id": "cfc2244b-bb93-4a6a-b087-525e7b2ffe50",
     "eaten_at": "2026-11-14T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -303,7 +303,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "48aef9df-3dc0-4e67-9977-0e142864466d",
+        "id": "5b6eedec-0841-4ce5-b451-161732a71495",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -334,7 +334,7 @@
     }
   },
   {
-    "id": "f0805928-6a7f-4a35-9003-f68f426e15ae",
+    "id": "1abc5272-3eac-4c80-b5ff-cf9a3ca4eae7",
     "eaten_at": "2026-11-13T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -342,7 +342,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "743448a9-886e-448f-8206-806bae7ddce2",
+        "id": "ac23fe4a-9269-484a-848e-51401def7674",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",
@@ -373,7 +373,7 @@
     }
   },
   {
-    "id": "f7d99a85-5e31-4b80-a534-2406fcbae450",
+    "id": "528ee60c-96ad-4362-8377-a4f96ec0acca",
     "eaten_at": "2026-11-12T07:30:00Z",
     "slot": "lunch",
     "note": null,
@@ -381,7 +381,7 @@
     "is_favourite": false,
     "items": [
       {
-        "id": "bdfe057e-cdab-4e66-b869-11431dac2452",
+        "id": "7faeef6b-bdeb-4ae6-9424-da4fbd744b20",
         "name": "home meals",
         "quantity": 1.0,
         "unit": "serving",

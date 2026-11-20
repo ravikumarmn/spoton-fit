@@ -26,6 +26,9 @@ abstract interface class SpotOnApi {
   Future<void> login(String email, String password);
   Future<void> logout();
   Future<void> deleteAccount(String password);
+
+  /// Signs out other devices; this one keeps working with fresh tokens.
+  Future<void> changePassword(String current, String next);
   Future<UserInfo> me();
 
   // Profile

@@ -263,6 +263,16 @@ class HttpSpotOnApi implements SpotOnApi {
   }
 
   @override
+  Future<void> changePassword(String current, String next) async =>
+      _storeTokens(
+        await _json(
+          'POST',
+          '/v1/account/password',
+          data: {'current_password': current, 'new_password': next},
+        ),
+      );
+
+  @override
   Future<void> deleteAccount(String password) async {
     await _json('DELETE', '/v1/account', data: {'password': password});
     await _tokens.clear();

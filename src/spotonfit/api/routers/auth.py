@@ -6,24 +6,34 @@
 - POST /v1/auth/refresh  -> new token pair; the old refresh token stops working
 - POST /v1/auth/logout   -> revokes the session (token family)
 - GET  /v1/me            -> the current user
+- POST /v1/account/password -> change the password (needs the current one); other sessions are signed out
 - DELETE /v1/account     -> permanently deletes the account and all its data (needs the password)
 Login, token and register are rate-limited per IP.
 """
 
+import datetime as dt
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
 from spotonfit.api.deps import Session
 from spotonfit.api.errors import api_error
 from spotonfit.api.ratelimit import login_limit
-from spotonfit.api.schemas import AccountDeleteIn, LoginIn, RefreshIn, TokenPair, UserCreate, UserOut
+from spotonfit.api.schemas import (
+    AccountDeleteIn,
+    LoginIn,
+    PasswordChangeIn,
+    RefreshIn,
+    TokenPair,
+    UserCreate,
+    UserOut,
+)
 from spotonfit.api.security import CurrentUser, hash_password, verify_password
 from spotonfit.config import settings
-from spotonfit.db import User
+from spotonfit.db import RefreshToken, User
 from spotonfit.services.account import delete_chat_threads, delete_user_data
 from spotonfit.services.auth import InvalidRefreshToken, issue_tokens, logout, rotate
 
@@ -87,6 +97,22 @@ async def logout_route(body: RefreshIn, user: CurrentUser, session: Session) -> 
 @router.get("/me", response_model=UserOut)
 async def me(user: CurrentUser) -> User:
     return user
+
+
+@router.post("/account/password", response_model=TokenPair, dependencies=RateLimited)
+async def change_password(body: PasswordChangeIn, request: Request, user: CurrentUser, session: Session) -> dict:
+    """Change the password. Every other session is signed out; this device gets a fresh token pair."""
+    if not verify_password(body.current_password, user.password_hash):
+        raise api_error(status.HTTP_401_UNAUTHORIZED, "invalid_credentials", "Incorrect current password")
+    user.password_hash = hash_password(body.new_password)
+    await session.execute(
+        update(RefreshToken)
+        .where(RefreshToken.user_id == user.id, RefreshToken.revoked_at.is_(None))
+        .values(revoked_at=dt.datetime.now(dt.UTC))
+    )
+    pair = await issue_tokens(session, user.id, user_agent=_ua(request))
+    await session.commit()
+    return pair
 
 
 @router.delete("/account", status_code=status.HTTP_204_NO_CONTENT, dependencies=RateLimited)

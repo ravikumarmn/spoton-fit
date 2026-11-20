@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -80,6 +81,16 @@ class MeScreen extends ConsumerWidget {
                 'Export my data',
                 Icons.ios_share,
                 () => context.push('/me/data'),
+              ),
+              _Row(
+                'Change password',
+                Icons.lock_outline,
+                () => context.push('/me/password'),
+              ),
+              _Row(
+                'Privacy policy',
+                Icons.privacy_tip_outlined,
+                () => openPrivacyPolicy(context, ref),
               ),
               _Row(
                 'Server address',
@@ -919,6 +930,101 @@ class _DataScreenState extends ConsumerState<DataScreen> {
           label: 'Export as CSV (zip)',
           icon: Icons.table_chart_outlined,
           onPressed: _busy == null ? () => _export('csv') : null,
+        ),
+      ],
+    ),
+  );
+}
+
+/// Opens the server's privacy policy page (GET /privacy) in the browser.
+Future<void> openPrivacyPolicy(BuildContext context, WidgetRef ref) async {
+  final base = ref.read(serverUrlProvider).replaceAll(RegExp(r'/+$'), '');
+  final url = Uri.parse('$base/privacy');
+  final messenger = ScaffoldMessenger.of(context);
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    messenger.showSnackBar(
+      SnackBar(content: Text('Open $url in your browser')),
+    );
+  }
+}
+
+class ChangePasswordScreen extends ConsumerStatefulWidget {
+  const ChangePasswordScreen({super.key});
+  @override
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
+}
+
+class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
+  final _current = TextEditingController();
+  final _next = TextEditingController();
+  bool _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _current.dispose();
+    _next.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_current.text.isEmpty) {
+      setState(() => _error = 'Enter your current password.');
+      return;
+    }
+    if (_next.text.length < 8) {
+      setState(() => _error = 'The new password needs at least 8 characters.');
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await ref.read(apiProvider).changePassword(_current.text, _next.text);
+      if (!mounted) return;
+      showToast(context, 'Password changed. Other devices are signed out.');
+      context.pop();
+    } on ApiException catch (e) {
+      if (mounted) setState(() => _error = e.message);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SubScaffold(
+    title: 'Change password',
+    child: ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      children: [
+        if (_error != null) ...[
+          InfoBanner(_error!, kind: BannerKind.error),
+          const SizedBox(height: 12),
+        ],
+        TextField(
+          controller: _current,
+          obscureText: true,
+          autofillHints: const [AutofillHints.password],
+          decoration: const InputDecoration(labelText: 'Current password'),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _next,
+          obscureText: true,
+          autofillHints: const [AutofillHints.newPassword],
+          decoration: const InputDecoration(
+            labelText: 'New password',
+            helperText: 'At least 8 characters',
+          ),
+          onSubmitted: (_) => _save(),
+        ),
+        const SizedBox(height: 16),
+        PrimaryButton(
+          label: 'Change password',
+          loading: _busy,
+          onPressed: _save,
         ),
       ],
     ),

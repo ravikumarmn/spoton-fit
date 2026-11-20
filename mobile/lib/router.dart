@@ -108,6 +108,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       full('/me/foods', (_, _) => const MyFoodsScreen()),
       full('/me/rules', (_, _) => const RulesScreen()),
       full('/me/notes', (_, _) => const CoachNotesScreen()),
+      full('/me/password', (_, _) => const ChangePasswordScreen()),
       full('/me/remembered', (_, _) => const RememberedScreen()),
       full('/me/data', (_, _) => const DataScreen()),
       full('/me/delete', (_, _) => const DeleteAccountScreen()),

@@ -96,6 +96,18 @@ class FakeApi implements SpotOnApi {
   }
 
   @override
+  Future<void> changePassword(String current, String next) async {
+    calls.add('changePassword');
+    if (current != 'right-pass') {
+      throw const ApiException(
+        status: 401,
+        code: 'invalid_credentials',
+        message: 'Incorrect current password',
+      );
+    }
+  }
+
+  @override
   Future<void> deleteAccount(String password) async {
     calls.add('deleteAccount');
     if (password != 'right-pass') {

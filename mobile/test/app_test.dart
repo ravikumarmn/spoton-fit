@@ -595,6 +595,36 @@ void main() {
     });
   });
 
+  group('change password', () {
+    testWidgets('wrong current password shows an error; the right one works', (
+      tester,
+    ) async {
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      await h.pump();
+      await h.tapText('Me');
+      expect(find.text('Privacy policy'), findsOneWidget);
+      await h.tapText('Change password');
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Current password'),
+        'wrong',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextField, 'New password'),
+        'brand-new-1',
+      );
+      await h.tap(find.widgetWithText(FilledButton, 'Change password'));
+      expect(find.text('Incorrect current password'), findsOneWidget);
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Current password'),
+        'right-pass',
+      );
+      await h.tap(find.widgetWithText(FilledButton, 'Change password'));
+      expect(api.calls.where((c) => c == 'changePassword'), hasLength(2));
+      expect(find.text('Current password'), findsNothing); // closed
+    });
+  });
+
   group('coach notes', () {
     testWidgets('notes are edited under Me and saved', (tester) async {
       final api = FakeApi()..notes = 'No dairy';

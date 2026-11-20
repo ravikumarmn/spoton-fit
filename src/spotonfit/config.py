@@ -172,6 +172,10 @@ class Settings(BaseSettings):
     access_token_minutes: int = 15
     refresh_token_days: int = 30
     allow_registration: bool = True
+    # Privacy policy page (GET /privacy): who to contact (email or URL; empty = "the person who
+    # invited you") and the date the text last changed.
+    privacy_contact: str = ""
+    privacy_updated: str = "20 November 2026"
     # JSON list in env, e.g. CORS_ORIGINS='["http://localhost:8501"]'
     cors_origins: list[str] = ["http://localhost:8501", "http://127.0.0.1:8501", "http://localhost:3000"]
 
