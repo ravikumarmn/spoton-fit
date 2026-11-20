@@ -12,7 +12,7 @@ rules and safety stay on the server. Plan and design decisions: [`docs/MOBILE_PL
 
 Welcome, Sign up, Sign in · 3-step onboarding and **Your plan** · **Today** · **Log a meal** (Recent / Photo / Type) → Analyzing → **Review meal** ·
 **Coach** (streaming, suggestions) · **Progress** (weekly review, weight trend, maintenance, measurements, History charts) ·
-**Me** (Edit profile, My foods, Food rules, Remembered foods, Export, Delete account, Server address).
+**Me** (Edit profile, My foods, Food rules, Remembered foods, Coach notes, Appearance, Change password, Privacy policy, Export, Delete account; Server address in debug builds).
 
 ## Run it
 
@@ -33,8 +33,12 @@ flutter run                                           # an emulator or a connect
 | A real phone on the same Wi-Fi | `http://<your computer's Wi-Fi address>:8000`, with the API started as `uvicorn ... --host 0.0.0.0` |
 | A hosted server | `https://...` |
 
-Set it in the app (Welcome screen → **Server address**, or Me → **Server address**; there is a *Test connection* button), or at build time with
-`--dart-define=SPOTON_API_URL=https://your-server`.
+In **debug builds**, set it in the app (Welcome screen → **Server address**, or Me → **Server address**; there is a
+*Test connection* button), or at build time with `--dart-define=SPOTON_API_URL=https://your-server`.
+
+**Release builds** use only the address built in with `SPOTON_API_URL` (the deploy sets the Cloud Run address). The
+Server address option is hidden and any address saved by an older version is ignored, so testers can't point the app
+at the wrong server. Add `--dart-define=SPOTON_SERVER_PICKER=true` to show it in a release build.
 
 Plain `http://` works in **debug builds only** (`android/app/src/debug/AndroidManifest.xml`, iOS `NSAllowsLocalNetworking`).
 Release builds need `https://`.

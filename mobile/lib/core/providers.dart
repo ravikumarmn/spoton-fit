@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,11 +49,23 @@ final appearanceProvider = NotifierProvider<Appearance, ThemeMode>(
   Appearance.new,
 );
 
+/// Whether people can change the server address. Off in release builds (the app ships with
+/// the cloud address built in); on in development builds for testing against a local API.
+/// `--dart-define=SPOTON_SERVER_PICKER=true` turns it on in a release build.
+final serverPickerProvider = Provider<bool>(
+  (ref) => !kReleaseMode || const bool.fromEnvironment('SPOTON_SERVER_PICKER'),
+);
+
 class ServerUrl extends Notifier<String> {
   static const _key = 'server_url';
 
   @override
-  String build() => ref.watch(prefsProvider).getString(_key) ?? _defaultServer;
+  String build() {
+    // Without the picker, an address saved by an older version is ignored, so nobody is stuck
+    // on a server they can no longer change.
+    if (!ref.watch(serverPickerProvider)) return _defaultServer;
+    return ref.watch(prefsProvider).getString(_key) ?? _defaultServer;
+  }
 
   Future<void> set(String url) async {
     var v = url.trim();

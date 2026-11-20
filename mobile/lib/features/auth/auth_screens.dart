@@ -101,11 +101,13 @@ class SplashScreen extends ConsumerWidget {
                     onPressed: () =>
                         ref.read(sessionProvider.notifier).restore(),
                   ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => showServerSheet(context),
-                    child: const Text('Change server address'),
-                  ),
+                  if (ref.watch(serverPickerProvider)) ...[
+                    const SizedBox(height: 8),
+                    TextButton(
+                      onPressed: () => showServerSheet(context),
+                      child: const Text('Change server address'),
+                    ),
+                  ],
                 ],
               ],
             ),
@@ -161,10 +163,11 @@ class WelcomeScreen extends ConsumerWidget {
                 onPressed: () => context.go('/sign-in'),
                 child: const Text('I already have an account'),
               ),
-              TextButton(
-                onPressed: () => showServerSheet(context),
-                child: const Text('Server address'),
-              ),
+              if (ref.watch(serverPickerProvider))
+                TextButton(
+                  onPressed: () => showServerSheet(context),
+                  child: const Text('Server address'),
+                ),
             ],
           ),
         ),
@@ -312,10 +315,11 @@ class _AuthFormState extends ConsumerState<_AuthForm> {
                     signUp ? 'I already have an account' : 'Create an account',
                   ),
                 ),
-                TextButton(
-                  onPressed: () => showServerSheet(context),
-                  child: const Text('Server address'),
-                ),
+                if (ref.watch(serverPickerProvider))
+                  TextButton(
+                    onPressed: () => showServerSheet(context),
+                    child: const Text('Server address'),
+                  ),
               ],
             ),
           ),

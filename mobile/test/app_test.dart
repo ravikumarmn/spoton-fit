@@ -25,7 +25,7 @@ class Harness {
   final FakeApi api;
   final shared = <(String, String)>[];
 
-  Future<void> pump({double textScale = 1.0}) async {
+  Future<void> pump({double textScale = 1.0, bool serverPicker = true}) async {
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
     tester.view.physicalSize = const Size(
@@ -42,6 +42,7 @@ class Harness {
       ProviderScope(
         overrides: [
           prefsProvider.overrideWithValue(prefs),
+          serverPickerProvider.overrideWithValue(serverPicker),
           apiProvider.overrideWithValue(api),
           pickPhotoProvider.overrideWithValue(
             ({required bool camera}) async => UploadImage(
@@ -644,6 +645,35 @@ void main() {
       await h.pump();
       await tester.pump(); // a single frame: no count-up in between
       expect(find.text(fmtInt(api.todayData.leftKcal)), findsOneWidget);
+    });
+  });
+
+  group('server address', () {
+    testWidgets('release builds hide it and ignore a saved address', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({
+        'server_url': 'http://192.168.1.6:8000',
+      });
+      final prefs = await SharedPreferences.getInstance();
+      final container = ProviderContainer(
+        overrides: [
+          prefsProvider.overrideWithValue(prefs),
+          serverPickerProvider.overrideWithValue(false),
+        ],
+      );
+      addTearDown(container.dispose);
+      expect(container.read(serverUrlProvider), isNot(contains('192.168')));
+
+      final h = Harness(tester, FakeApi()..signedIn = false);
+      await h.pump(serverPicker: false);
+      expect(find.text('Server address'), findsNothing);
+    });
+
+    testWidgets('development builds show it', (tester) async {
+      final h = Harness(tester, FakeApi()..signedIn = false);
+      await h.pump();
+      expect(find.text('Server address'), findsOneWidget);
     });
   });
 

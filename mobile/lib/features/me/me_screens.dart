@@ -102,11 +102,12 @@ class MeScreen extends ConsumerWidget {
                 Symbols.privacy_tip_rounded,
                 () => openPrivacyPolicy(context, ref),
               ),
-              _Row(
-                'Server address',
-                Symbols.dns_rounded,
-                () => showServerSheet(context),
-              ),
+              if (ref.watch(serverPickerProvider))
+                _Row(
+                  'Server address',
+                  Symbols.dns_rounded,
+                  () => showServerSheet(context),
+                ),
               _Row(
                 'Delete account',
                 Symbols.delete_rounded,
