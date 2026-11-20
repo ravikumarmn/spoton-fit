@@ -178,6 +178,8 @@ class Settings(BaseSettings):
     privacy_updated: str = "20 November 2026"
     # JSON list in env, e.g. CORS_ORIGINS='["http://localhost:8501"]'
     cors_origins: list[str] = ["http://localhost:8501", "http://127.0.0.1:8501", "http://localhost:3000"]
+    # Folder with the Flutter web build; served at "/" when it has an index.html (see api/webapp.py).
+    web_dir: str = "webapp"
 
     # --- LLM (LangChain init_chat_model) ---------------------------------------
     # The API key is read from GOOGLE_API_KEY (GEMINI_API_KEY also works).

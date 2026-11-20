@@ -13,3 +13,7 @@ eval_results.json
 coach_eval_results.json
 .neon
 .DS_Store
+
+# Flutter web build copied here by the deploy pipeline (served by the API at "/")
+webapp/*
+!webapp/.gitkeep

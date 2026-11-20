@@ -21,6 +21,8 @@ FROM python:3.15.2-slim
 RUN useradd --create-home --uid 10001 app
 WORKDIR /app
 COPY --from=builder --chown=app:app /app/.venv /app/.venv
+# The Flutter web build (the deploy pipeline fills webapp/ before docker build); served at "/".
+COPY --chown=app:app webapp ./webapp
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     ENVIRONMENT=prod \

@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -882,14 +885,23 @@ typedef ShareFile = Future<void> Function(
 
 final shareFileProvider = Provider<ShareFile>((ref) {
   return (bytes, filename, mimeType) async {
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/$filename');
-    await file.writeAsBytes(bytes, flush: true);
+    // In a browser there is no temporary folder; share_plus hands the bytes to the browser's
+    // share sheet, or downloads the file when the browser has none.
+    final XFile file;
+    if (kIsWeb) {
+      file = XFile.fromData(
+        Uint8List.fromList(bytes),
+        mimeType: mimeType,
+        name: filename,
+      );
+    } else {
+      final dir = await getTemporaryDirectory();
+      final saved = File('${dir.path}/$filename');
+      await saved.writeAsBytes(bytes, flush: true);
+      file = XFile(saved.path, mimeType: mimeType);
+    }
     await SharePlus.instance.share(
-      ShareParams(
-        files: [XFile(file.path, mimeType: mimeType)],
-        subject: 'My SpotOn data',
-      ),
+      ShareParams(files: [file], subject: 'My SpotOn data'),
     );
   };
 });

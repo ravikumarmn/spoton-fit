@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:flutter/foundation.dart' show kIsWeb, kReleaseMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,10 +21,15 @@ final prefsProvider = Provider<SharedPreferences>(
 final tokenStoreProvider = Provider<TokenStore>((ref) => SecureTokenStore());
 
 /// Compile-time default; override with `--dart-define=SPOTON_API_URL=https://...`.
-const _defaultServer = String.fromEnvironment(
-  'SPOTON_API_URL',
-  defaultValue: 'http://10.0.2.2:8000',
-);
+const _definedServer = String.fromEnvironment('SPOTON_API_URL');
+
+/// The built-in address. A release build running in a browser is served by the API itself, so
+/// it talks to the address it was loaded from (no separate address to configure, no CORS).
+String get _defaultServer {
+  if (_definedServer.isNotEmpty) return _definedServer;
+  if (kIsWeb && kReleaseMode) return Uri.base.origin;
+  return 'http://10.0.2.2:8000';
+}
 
 /// The SpotOn server address. On the Android emulator, 10.0.2.2 is the host computer;
 /// on a real phone use the computer's Wi-Fi address (e.g. http://192.168.1.20:8000).

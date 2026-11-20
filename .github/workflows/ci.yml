@@ -89,6 +89,9 @@ jobs:
           dart format --output=none --set-exit-if-changed lib test
           flutter analyze
           flutter test
+      - name: Build the web app (served by the API; iPhone and browser)
+        working-directory: mobile
+        run: flutter build web --release --no-web-resources-cdn
       - name: Build a debug APK
         working-directory: mobile
         run: flutter build apk --debug
