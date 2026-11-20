@@ -40,9 +40,14 @@ async def get_progress(user: CurrentUser, request: Request, session: Session) ->
 async def weekly(user: CurrentUser, request: Request, session: Session) -> WeeklyReviewOut:
     """The latest completed week's review. Weeks run WEEK_STARTS_ON (default Sunday) to the
     day before, so a new review is ready each week on that day."""
-    await generate_weekly(request.app.state.db.sessionmaker, user.id)
+    return await weekly_review_out(request, session, user.id)
+
+
+async def weekly_review_out(request: Request, session, user_id: uuid.UUID) -> WeeklyReviewOut:
+    """Shared by GET /v1/reviews/weekly and GET /v1/today."""
+    await generate_weekly(request.app.state.db.sessionmaker, user_id)
     latest = await session.scalar(
-        select(WeeklyReview).where(WeeklyReview.user_id == user.id).order_by(WeeklyReview.week_start.desc()).limit(1)
+        select(WeeklyReview).where(WeeklyReview.user_id == user_id).order_by(WeeklyReview.week_start.desc()).limit(1)
     )
     review = ReviewOut.model_validate(latest) if latest else None
     return WeeklyReviewOut(

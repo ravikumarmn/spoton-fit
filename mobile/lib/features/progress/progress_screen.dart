@@ -366,7 +366,14 @@ class _MaintenanceCard extends StatelessWidget {
             ],
           ),
         ),
-        Text('${fmtInt(m.kcal)} kcal', style: AppText.number),
+        // Flexible: at large text sizes the number wraps instead of pushing past the card.
+        Flexible(
+          child: Text(
+            '${fmtInt(m.kcal)} kcal',
+            style: AppText.number,
+            textAlign: TextAlign.end,
+          ),
+        ),
         const Icon(Icons.chevron_right, color: AppColors.text3),
       ],
     ),

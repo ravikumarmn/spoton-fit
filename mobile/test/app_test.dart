@@ -9,6 +9,7 @@ import 'package:spoton/core/api/spoton_api.dart';
 import 'package:spoton/core/api_error.dart';
 import 'package:spoton/core/models.dart';
 import 'package:spoton/core/providers.dart';
+import 'package:spoton/ui/format.dart';
 import 'package:spoton/features/log/log_state.dart';
 import 'package:spoton/features/onboarding/onboarding.dart' show explainPlan;
 import 'package:spoton/features/me/me_screens.dart';
@@ -71,16 +72,25 @@ class Harness {
     } else {
       await tester.scrollUntilVisible(base, 300, scrollable: _scrollable);
     }
+    // Half under the bottom bar counts as "visible" to the helpers above, but a tap would
+    // land on the bar. Keep scrolling until the centre of the target can be tapped.
+    for (var i = 0; i < 10 && base.hitTestable().evaluate().isEmpty; i++) {
+      await tester.drag(_scrollable, const Offset(0, -120));
+      await tester.pump(const Duration(milliseconds: 100));
+    }
   }
 
   /// The list to scroll: the open bottom sheet's, else the page's. Only vertical lists: the
   /// first Scrollable can be a sideways chip row, which never reveals rows below the fold.
   Finder get _scrollable {
-    final vertical = find.byWidgetPredicate(
-      (w) =>
-          w is Scrollable &&
-          axisDirectionToAxis(w.axisDirection) == Axis.vertical,
-    );
+    // hitTestable: tabs that aren't showing stay alive offstage; skip their lists.
+    final vertical = find
+        .byWidgetPredicate(
+          (w) =>
+              w is Scrollable &&
+              axisDirectionToAxis(w.axisDirection) == Axis.vertical,
+        )
+        .hitTestable();
     final sheet = find.byType(BottomSheet);
     return sheet.evaluate().isNotEmpty
         ? find.descendant(of: sheet, matching: vertical).first
@@ -238,11 +248,18 @@ void main() {
     testWidgets('shows what is left, with the equation in words', (
       tester,
     ) async {
-      final h = Harness(tester, FakeApi());
+      final api = FakeApi();
+      final h = Harness(tester, api);
       await h.pump();
+      final t = api.todayData;
       expect(find.text('Calories left'), findsOneWidget);
-      expect(find.text('840'), findsOneWidget);
-      expect(find.text('2,070 target − 1,230 eaten'), findsOneWidget);
+      expect(find.text(fmtInt(t.leftKcal)), findsOneWidget);
+      expect(
+        find.text(
+          '${fmtInt(t.targets.kcal)} target − ${fmtInt(t.eaten.kcal)} eaten',
+        ),
+        findsOneWidget,
+      );
       expect(find.text('Protein'), findsOneWidget);
       expect(find.textContaining('62 left'), findsOneWidget);
       await h.reveal(find.text('Meals'));
@@ -470,6 +487,69 @@ void main() {
       );
     });
 
+    testWidgets(
+      'a meal of only remembered foods saves straight away, with Undo',
+      (tester) async {
+        final api = FakeApi();
+        final first = api.draft.items.first.copy()..source = 'memory';
+        api.draft = Draft(items: [first], mealSlot: 'breakfast');
+        final h = Harness(tester, api);
+        await h.pump();
+        await toReview(h);
+        expect(find.text('Review meal'), findsNothing);
+        expect(api.saved, hasLength(1));
+        expect(find.textContaining('Logged'), findsOneWidget);
+        await h.tapText('Undo');
+        expect(api.calls.any((c) => c.startsWith('delete')), isTrue);
+      },
+    );
+
+    testWidgets('portion size scales one item for this meal only', (
+      tester,
+    ) async {
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      await h.pump();
+      await toReview(h);
+      expect(
+        find.textContaining('1 piece ≈ 50 g × 1.4 kcal/g ≈ 72 kcal'),
+        findsOneWidget,
+      );
+      await h.tap(find.text('Larger'));
+      expect(find.text('Total 892 kcal'), findsOneWidget); // 6 x 72 x 1.3 + 330
+      await h.tapText('Save meal');
+      final eggs = api.saved.single.items.first;
+      expect(eggs.perUnit.kcal, closeTo(93.6, 0.01));
+      expect(
+        eggs.source,
+        'ai_estimate',
+      ); // a bigger portion is not a new food value
+    });
+
+    testWidgets('holding + keeps adding', (tester) async {
+      final api = FakeApi();
+      final h = Harness(tester, api);
+      await h.pump();
+      await toReview(h);
+      final plus = find.descendant(
+        of: find.byType(QuantityStepper).first,
+        matching: find.byIcon(Icons.add),
+      );
+      final gesture = await tester.startGesture(tester.getCenter(plus));
+      // Long press is recognised at 500 ms; then one repeat every 180 ms.
+      await tester.pump(const Duration(milliseconds: 600));
+      for (var i = 0; i < 6; i++) {
+        await tester.pump(const Duration(milliseconds: 180));
+      }
+      await gesture.up();
+      await h.settle();
+      expect(find.text('Total 762 kcal'), findsNothing);
+      final stepper = tester.widget<QuantityStepper>(
+        find.byType(QuantityStepper).first,
+      );
+      expect(stepper.value, greaterThanOrEqualTo(9)); // from 6
+    });
+
     testWidgets('when analysis fails, the user can retry or type it instead', (
       tester,
     ) async {
@@ -512,6 +592,23 @@ void main() {
       expect(find.text('Edit meal'), findsOneWidget);
       await h.tapText('Save changes');
       expect(api.calls.any((c) => c.startsWith('updateMeal:')), isTrue);
+    });
+  });
+
+  group('coach notes', () {
+    testWidgets('notes are edited under Me and saved', (tester) async {
+      final api = FakeApi()..notes = 'No dairy';
+      final h = Harness(tester, api);
+      await h.pump();
+      await h.tapText('Me');
+      await h.tapText('Coach notes');
+      expect(find.text('No dairy'), findsOneWidget);
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Your notes'),
+        'Vegetarian on Tuesdays',
+      );
+      await h.tapText('Save notes');
+      expect(api.notes, 'Vegetarian on Tuesdays');
     });
   });
 
@@ -766,14 +863,28 @@ void main() {
       ) async {
         final api = FakeApi();
         final h = Harness(tester, api);
+        // Scroll the whole page: rows below the fold are only built (and checked) when shown.
+        Future<void> wholePage() async {
+          for (var i = 0; i < 12; i++) {
+            final list = find.byType(Scrollable).hitTestable();
+            if (list.evaluate().isEmpty) return;
+            await tester.drag(list.first, const Offset(0, -300));
+            await tester.pump(const Duration(milliseconds: 50));
+            expect(tester.takeException(), isNull);
+          }
+        }
+
         await h.pump(textScale: scale);
         expect(tester.takeException(), isNull); // Today
+        await wholePage();
         await h.tapText('Progress');
         expect(tester.takeException(), isNull);
+        await wholePage();
         await h.tapText('Coach');
         expect(tester.takeException(), isNull);
         await h.tapText('Me');
         expect(tester.takeException(), isNull);
+        await wholePage();
         await h.tap(find.byIcon(Icons.add));
         expect(tester.takeException(), isNull); // Capture (photo)
         await h.tapText('Type');

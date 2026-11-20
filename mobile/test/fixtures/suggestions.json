@@ -1,10 +1,10 @@
 {
   "mode": "my_foods",
   "left": {
-    "kcal": 840.0,
+    "kcal": 660.0,
     "protein_g": 62.0,
-    "carbs_g": 192.0,
-    "fat_g": -14.0,
+    "carbs_g": 158.0,
+    "fat_g": -20.0,
     "water_ml": 2700.0,
     "steps": 3600.0
   },

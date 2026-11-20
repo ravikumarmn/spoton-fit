@@ -18,16 +18,18 @@ from spotonfit.api.deps import Session, get_workout_parser
 from spotonfit.api.errors import api_error
 from spotonfit.api.ratelimit import ai_limit
 from spotonfit.api.routers.profile import profile_required
+from spotonfit.api.routers.progress import weekly_review_out
 from spotonfit.api.schemas import HistoryOut, StepsIn, TargetsOut, TodayOut, WaterIn, WeightIn, WorkoutIn, WorkoutOut
 from spotonfit.api.security import CurrentUser
 from spotonfit.config import settings
 from spotonfit.core.rules import nudges
 from spotonfit.core.trend import aggregate, weight_trend
-from spotonfit.db import StepLog, WaterLog, WeightLog, Workout
+from spotonfit.db import Meal, StepLog, WaterLog, WeightLog, Workout
 from spotonfit.services.ledger import (
     FutureDay,
     burned_so_far,
     daily_frame,
+    day_bounds,
     day_summary,
     get_profile,
     get_profile_row,
@@ -115,12 +117,24 @@ async def log_workout(
 
 
 @router.get("/today", response_model=TodayOut)
-async def today(user: CurrentUser, session: Session, day: Annotated[dt.date | None, Query(alias="date")] = None):
-    """Eaten, left and burned (estimate) for a day. Exercise is not added back to the budget."""
+async def today(
+    user: CurrentUser,
+    request: Request,
+    session: Session,
+    day: Annotated[dt.date | None, Query(alias="date")] = None,
+):
+    """Eaten, left and burned (estimate) for a day, with the day's meals and (for today) the
+    weekly review, so the Today screen needs one call. Exercise is not added back to the budget."""
     profile = await get_profile(session, user.id)
     if not profile:
         raise profile_required()
+    is_today = day in (None, local_today())
+    review = await weekly_review_out(request, session, user.id) if is_today else None
     d = await day_summary(session, day or local_today(), user.id)
+    start, end = day_bounds(d.day)
+    meals = await session.scalars(
+        select(Meal).where(Meal.user_id == user.id, Meal.eaten_at >= start, Meal.eaten_at < end).order_by(Meal.eaten_at)
+    )
     return TodayOut(
         day=d.day,
         eaten={"kcal": d.kcal, "protein_g": d.protein, "carbs_g": d.carbs, "fat_g": d.fat, "fibre_g": d.fibre},
@@ -130,7 +144,9 @@ async def today(user: CurrentUser, session: Session, day: Annotated[dt.date | No
         steps=d.steps,
         workout_min=d.workout_min,
         burned_kcal_est=burned_so_far(d, profile.weight_kg),
-        nudges=nudges([st for _, st in await statuses(session, user.id)]) if day in (None, local_today()) else [],
+        nudges=nudges([st for _, st in await statuses(session, user.id)]) if is_today else [],
+        meals=list(meals),
+        weekly_review=review,
     )
 
 

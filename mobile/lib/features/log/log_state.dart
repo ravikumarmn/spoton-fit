@@ -95,6 +95,14 @@ class DraftState {
   );
 }
 
+/// Portion sizes on the review screen: about 0.75x / 1x / 1.3x the estimated grams
+/// (IMPROVEMENTS_BACKLOG 3.5). One place to tune them.
+const portionSizes = <(String, double)>[
+  ('Smaller', 0.75),
+  ('As estimated', 1.0),
+  ('Larger', 1.3),
+];
+
 class DraftNotifier extends Notifier<DraftState?> {
   @override
   DraftState? build() => null;
@@ -148,6 +156,20 @@ class DraftNotifier extends Notifier<DraftState?> {
         !edited.perUnit.sameAs(original.perUnit);
     items[index] = edited.copy()
       ..source = changedFood ? 'edited' : original.source;
+    state = state!.copyWith(items: items, edited: true);
+  }
+
+  /// This portion was smaller or larger than the estimate: scales the item's per-unit values
+  /// and grams for this meal only. Unlike replaceItem it doesn't mark the food "edited", so
+  /// the user's remembered values for the food stay as they are.
+  void setSize(int index, double factor) {
+    final items = [...state!.items];
+    final it = items[index];
+    final ratio = factor / it.sizeFactor;
+    items[index] = it.copy()
+      ..perUnit = it.perUnit * ratio
+      ..gramsPerUnit = it.gramsPerUnit == null ? null : it.gramsPerUnit! * ratio
+      ..sizeFactor = factor;
     state = state!.copyWith(items: items, edited: true);
   }
 

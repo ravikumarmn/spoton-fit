@@ -10,6 +10,7 @@ Division of labour:
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, fields
 
 # Atwater general factors: energy per gram of macronutrient (kcal/g). These are
@@ -40,14 +41,20 @@ class Nutrients:
         return {f.name: getattr(self, f.name) for f in fields(self)}
 
 
+_NON_WORD = re.compile(r"[^\w\s]")
+
+
+def _singular(word: str) -> str:
+    return word[:-1] if len(word) > 3 and word.endswith("s") and not word.endswith("ss") else word
+
+
 def food_key(name: str) -> str:
-    """Normalised name for matching a user's remembered foods: lower case, single
-    spaces, simple plural removed ("Boiled  Eggs" -> "boiled egg"). Exact match only;
-    no fuzzy matching, so one food is never swapped for another."""
-    words = name.strip().lower().split()
-    if words and len(words[-1]) > 3 and words[-1].endswith("s") and not words[-1].endswith("ss"):
-        words[-1] = words[-1][:-1]
-    return " ".join(words)
+    """Normalised name for matching a user's remembered foods: lower case, punctuation and
+    word order ignored, simple plurals removed, so "egg, boiled", "Boiled  Eggs" and
+    "boiled egg" are one food. Still an exact match on the words: no fuzzy matching, so one
+    food is never swapped for another. (Migration 0005 re-keyed stored rows to this form.)"""
+    words = _NON_WORD.sub(" ", name.lower()).split()
+    return " ".join(sorted(_singular(w) for w in words))
 
 
 def item_totals(per_unit: Nutrients, quantity: float) -> Nutrients:

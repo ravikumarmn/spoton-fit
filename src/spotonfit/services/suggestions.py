@@ -24,7 +24,7 @@ from spotonfit.agents.suggester import Suggester, finalize
 from spotonfit.config import settings
 from spotonfit.core.rules import blocked_foods, matches
 from spotonfit.services import food_memory
-from spotonfit.services.ledger import day_summary, get_profile, local_today
+from spotonfit.services.ledger import coach_notes, day_summary, get_profile, local_today
 from spotonfit.services.my_foods import describe, list_my_foods
 from spotonfit.services.rules import statuses
 
@@ -63,6 +63,9 @@ async def suggest_for_user(
         context["use ONLY these foods (the user can get them)"] = describe(mine)
     if blocked:
         context["do NOT suggest (the user's own rules)"] = ", ".join(blocked)
+    notes = await coach_notes(session, user_id)
+    if notes:
+        context["the user's standing notes (respect them)"] = notes
 
     options = finalize(await suggester(context), left["kcal"], await food_memory.load(session, user_id))
     options = [o for o in options if not any(matches(b, i["name"]) for b in blocked for i in o["items"])]

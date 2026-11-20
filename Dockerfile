@@ -25,8 +25,11 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     ENVIRONMENT=prod \
     AUTO_MIGRATE=false \
-    PORT=8080
+    PORT=8080 \
+    WEB_CONCURRENCY=1
 USER app
 EXPOSE 8080
 # --proxy-headers: trust X-Forwarded-For from Cloud Run's front end (client IPs for rate limits).
-CMD ["sh", "-c", "uvicorn spotonfit.api.main:app --host 0.0.0.0 --port ${PORT} --workers 2 --proxy-headers --forwarded-allow-ips='*'"]
+# One process by default: rate limits are counted in memory, so more processes (or instances)
+# would each allow the full limit. The async app handles many requests in one process.
+CMD ["sh", "-c", "uvicorn spotonfit.api.main:app --host 0.0.0.0 --port ${PORT} --workers ${WEB_CONCURRENCY} --proxy-headers --forwarded-allow-ips='*'"]

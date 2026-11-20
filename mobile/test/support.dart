@@ -268,6 +268,17 @@ class FakeApi implements SpotOnApi {
   @override
   Future<List<FoodRule>> rules() async => ruleList;
 
+  String notes = '';
+
+  @override
+  Future<String> coachNotes() async => notes;
+
+  @override
+  Future<String> setCoachNotes(String value) async {
+    calls.add('notes');
+    return notes = value.trim();
+  }
+
   @override
   Future<FoodRule> parseRule(String text) async =>
       FoodRule.fromJson(fixtureMap('rule_parse'));

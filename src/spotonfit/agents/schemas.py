@@ -57,6 +57,15 @@ class MealSuggestions(BaseModel):
     options: list[SuggestionOption] = Field(min_length=1, max_length=3)
 
 
+class SafetyCheck(BaseModel):
+    """Whether a matched red-flag phrase is something the user reports experiencing."""
+
+    applies: bool = Field(
+        description="True if the user says they have or recently had this symptom (or you are unsure); "
+        "false only if it is clearly negated, hypothetical, about someone else, or a general question"
+    )
+
+
 class RuleSpec(BaseModel):
     """A plain-English food rule turned into fields the rule engine can check."""
 

@@ -23,15 +23,16 @@ from fastapi.responses import StreamingResponse
 
 from spotonfit.agents.coach import record_exchange, stream_reply, thread_config, thread_history, with_clock
 from spotonfit.agents.models import LLMNotConfigured
-from spotonfit.agents.safety import screen
-from spotonfit.api.deps import get_coach_factory
+from spotonfit.agents.safety import screen_confirmed
+from spotonfit.api.deps import Session, get_coach_factory, get_safety_confirmer
 from spotonfit.api.errors import api_error
 from spotonfit.api.ratelimit import ai_limit
-from spotonfit.api.schemas import ChatIn, ChatOut, ThreadOut
+from spotonfit.api.routers.profile import profile_required
+from spotonfit.api.schemas import ChatIn, ChatOut, CoachNotes, ThreadOut
 from spotonfit.api.security import CurrentUser
 from spotonfit.config import settings
 from spotonfit.observability import hash_user
-from spotonfit.services.ledger import local_today
+from spotonfit.services.ledger import coach_notes, get_profile_row, local_today
 
 router = APIRouter(prefix="/v1/coach", tags=["coach"])
 log = logging.getLogger(__name__)
@@ -50,13 +51,17 @@ def _agent(factory, user, request):
 
 @router.post("/messages", response_model=ChatOut)
 async def send_message(
-    body: ChatIn, user: CurrentUser, request: Request, factory: Annotated[object, Depends(get_coach_factory)]
+    body: ChatIn,
+    user: CurrentUser,
+    request: Request,
+    factory: Annotated[object, Depends(get_coach_factory)],
+    confirm: Annotated[object, Depends(get_safety_confirmer)],
 ):
     ai_limit(request, user.id)
     thread = body.thread_id or local_today().isoformat()
     config = thread_config(user.id, thread, hash_user(user.id))
     wants_stream = "text/event-stream" in request.headers.get("accept", "")
-    route = screen(body.message)
+    route = await screen_confirmed(body.message, confirm)
 
     if route is not None:
         log.info("coach safety route: %s", route.kind)
@@ -108,6 +113,22 @@ async def send_message(
         log.exception("coach failed")
         raise api_error(status.HTTP_502_BAD_GATEWAY, "ai_failed", "Coach is unavailable, try again") from e
     return ChatOut(reply=result["messages"][-1].text, thread_id=thread)
+
+
+@router.get("/notes", response_model=CoachNotes)
+async def get_notes(user: CurrentUser, session: Session) -> CoachNotes:
+    """What the coach remembers about you across days (backlog: cross-day coach memory)."""
+    return CoachNotes(notes=await coach_notes(session, user.id))
+
+
+@router.put("/notes", response_model=CoachNotes)
+async def put_notes(body: CoachNotes, user: CurrentUser, session: Session) -> CoachNotes:
+    row = await get_profile_row(session, user.id)
+    if row is None:
+        raise profile_required()
+    row.coach_notes = body.notes.strip() or None
+    await session.commit()
+    return CoachNotes(notes=row.coach_notes or "")
 
 
 @router.get("/threads/{thread_id}", response_model=ThreadOut)

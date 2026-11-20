@@ -492,6 +492,18 @@ class HttpSpotOnApi implements SpotOnApi {
   ).map(MyFood.fromJson).toList();
 
   @override
+  Future<String> coachNotes() async =>
+      ((await _json('GET', '/v1/coach/notes') as Map)['notes'] as String?) ??
+      '';
+
+  @override
+  Future<String> setCoachNotes(String notes) async =>
+      ((await _json('PUT', '/v1/coach/notes', data: {'notes': notes})
+              as Map)['notes']
+          as String?) ??
+      '';
+
+  @override
   Future<List<FoodRule>> rules() async =>
       _list(await _json('GET', '/v1/rules')).map(FoodRule.fromJson).toList();
 

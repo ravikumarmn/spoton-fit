@@ -43,7 +43,10 @@ How to estimate:
 - Use Indian household units where natural (piece, katori ~150 g, ladle, cup, plate, glass).
 - If the user's note gives counts or amounts, the note wins over the photo.
 - Be realistic, not optimistic: photo estimates usually miss hidden fat, so do not under-count oil.
-- Ask at most one clarify question, only for a calorie-dense item you are unsure about.
+- Ask at most one clarify question, and only when the answer would change the meal by roughly 100 kcal
+  or more. Pick the biggest unknown, in this order: milk vs water (oats, tea, coffee, porridge), ghee/oil/butter
+  amount, added sugar or jaggery, then piece size of sweets, rotis, parathas or a bowl. Skip it if the note
+  already answers it. Still give your best estimate for every item.
 - Choose meal_slot from the local time given."""
 
 

@@ -104,6 +104,13 @@ def main() -> int:
 
         app.dependency_overrides[get_coach_factory] = lambda: no_model
 
+        from spotonfit.api.deps import get_safety_confirmer
+
+        async def always_applies(_message, _term):  # offline: the phrase match alone decides
+            return True
+
+        app.dependency_overrides[get_safety_confirmer] = lambda: always_applies
+
     rows = []
     with TestClient(app) as c:
         tok = c.post("/v1/auth/register", json={"email": "evals@example.com", "password": "eval-pass-123"}).json()

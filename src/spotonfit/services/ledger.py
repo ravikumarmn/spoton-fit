@@ -83,6 +83,12 @@ async def get_profile_row(session: AsyncSession, user_id: uuid.UUID) -> ProfileR
     return await session.scalar(select(ProfileRow).where(ProfileRow.user_id == user_id))
 
 
+async def coach_notes(session: AsyncSession, user_id: uuid.UUID) -> str:
+    """The user's notes for the coach ("" if none)."""
+    row = await get_profile_row(session, user_id)
+    return (row.coach_notes or "").strip() if row else ""
+
+
 def to_profile(row: ProfileRow, latest_kg: float | None = None, latest_body_fat: float | None = None) -> Profile:
     return Profile(
         age=row.age,

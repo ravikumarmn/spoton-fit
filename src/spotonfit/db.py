@@ -124,6 +124,8 @@ class ProfileRow(Base):
     # Cumulative changes from accepted weekly reviews (PRD P-05); applied on top of the formula.
     kcal_adjustment: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     steps_adjustment: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    # Free-form things the coach should remember across days ("vegetarian on Tuesdays").
+    coach_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class Meal(Base):

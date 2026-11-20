@@ -221,3 +221,83 @@ async def test_coach_memory_survives_a_restart(tmp_path, monkeypatch):
         agent = build_coach("u1", None, saver, estimate, stub_suggester, model=ToolFake(messages=iter([])))
         history = await thread_history(agent, config)
     assert [m["content"] for m in history] == ["I train in the evenings", "Noted."]
+
+
+# --- safety: the small model confirms red-flag matches (backlog: "no chest pain" false positive) ---
+
+
+def _confirmer(client, answer):
+    from spotonfit.api.deps import get_safety_confirmer
+
+    calls = []
+
+    async def confirm(message, term):
+        calls.append(term)
+        if isinstance(answer, Exception):
+            raise answer
+        return answer
+
+    client.app.dependency_overrides[get_safety_confirmer] = lambda: confirm
+    return calls
+
+
+def test_negated_symptom_gets_a_normal_coach_reply(client, auth):
+    calls = _confirmer(client, False)
+    coach_with(client, ["Rest well and keep protein up today."])
+    r = client.post("/v1/coach/messages", headers=auth, json={"message": "No chest pain today, just tired"})
+    assert r.status_code == 200 and r.json()["safety"] is None
+    assert r.json()["reply"] == "Rest well and keep protein up today."
+    assert calls == ["chest pain"]
+
+
+def test_confirmed_symptom_keeps_the_safety_reply(client, auth):
+    _confirmer(client, True)
+    left = coach_with(client, ["should not be used"])
+    r = client.post("/v1/coach/messages", headers=auth, json={"message": "I had chest pain on the treadmill"})
+    assert r.json()["safety"] == "red_flag" and r.json()["reply"] == settings.safety.red_flag_reply
+    assert next(left, None) is not None  # the coach model was never asked
+
+
+def test_a_failed_check_keeps_the_safety_reply(client, auth):
+    _confirmer(client, RuntimeError("model down"))
+    r = client.post("/v1/coach/messages", headers=auth, json={"message": "No chest pain today"})
+    assert r.json()["safety"] == "red_flag"
+
+
+def test_support_routes_are_never_second_guessed(client, auth):
+    calls = _confirmer(client, False)
+    r = client.post("/v1/coach/messages", headers=auth, json={"message": "I want to starve myself this week"})
+    assert r.json()["safety"] == "support" and calls == []
+
+
+# --- coach notes across days (backlog 3.4) ------------------------------------------
+
+
+def test_coach_notes_are_saved_and_reach_suggestions(client, auth):
+    from spotonfit.api.deps import get_suggester
+
+    assert client.get("/v1/coach/notes", headers=auth).json() == {"notes": ""}
+    r = client.put("/v1/coach/notes", headers=auth, json={"notes": "  Vegetarian on Tuesdays. No mushrooms.  "})
+    assert r.status_code == 200 and r.json()["notes"] == "Vegetarian on Tuesdays. No mushrooms."
+    assert client.get("/v1/coach/notes", headers=auth).json()["notes"] == "Vegetarian on Tuesdays. No mushrooms."
+
+    seen = {}
+
+    async def capture(context):
+        seen.update(context)
+        return await stub_suggester(context)
+
+    client.app.dependency_overrides[get_suggester] = lambda: capture
+    client.get("/v1/suggestions", headers=auth, params={"mode": "ideal"})
+    assert seen["the user's standing notes (respect them)"] == "Vegetarian on Tuesdays. No mushrooms."
+
+    assert client.put("/v1/coach/notes", headers=auth, json={"notes": ""}).json() == {"notes": ""}
+    assert client.put("/v1/coach/notes", headers=auth, json={"notes": "x" * 1001}).status_code == 422
+
+
+def test_coach_notes_need_a_profile(client):
+    from tests.conftest import bearer, register
+
+    fresh = bearer(register(client, "new@example.com"))
+    r = client.put("/v1/coach/notes", headers=fresh, json={"notes": "no dairy"})
+    assert r.status_code in (404, 409, 422) and r.json()["error"]["code"] == "profile_required"

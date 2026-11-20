@@ -27,7 +27,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 from spotonfit.agents.suggester import Suggester
 from spotonfit.config import settings
 from spotonfit.core.trend import aggregate
-from spotonfit.services.ledger import daily_frame, day_summary, get_profile, local_today
+from spotonfit.services.ledger import coach_notes, daily_frame, day_summary, get_profile, local_today
 from spotonfit.services.my_foods import EFFORT_LABELS, list_my_foods
 from spotonfit.services.progress import progress
 from spotonfit.services.rules import statuses
@@ -49,6 +49,8 @@ How you work:
   Predictions are always ranges, never promises.
 - The user's food rules (get_rules) are their own choices: respect them, and mention gently
   when something would break one. Their My Foods (get_my_foods) are what they can get.
+- Before suggesting or judging food, call get_notes: the user's own notes (diet pattern,
+  allergies, dislikes, schedule) apply on every day, e.g. "vegetarian on Tuesdays".
 
 Safety:
 - Never recommend eating below the calorie floor returned by get_targets.
@@ -147,6 +149,12 @@ def make_tools(
             default=str,
         )
 
+    async def get_notes() -> str:
+        """The user's standing notes for the coach (diet pattern, allergies, dislikes, schedule)."""
+        async with sessionmaker() as s:
+            notes = await coach_notes(s, user_id)
+        return json.dumps({"notes": notes or "(none)"})
+
     async def get_my_foods() -> str:
         """Foods the user can actually get, with effort (no cooking, 5-minute prep, buy nearby, order in)."""
         async with sessionmaker() as s:
@@ -176,6 +184,7 @@ def make_tools(
         suggest_meal,
         get_rules,
         get_my_foods,
+        get_notes,
         get_progress,
         get_history,
     ]

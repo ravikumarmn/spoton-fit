@@ -79,10 +79,15 @@ class _Body extends ConsumerWidget {
     final t = data.targets;
     final left = data.leftKcal;
     final over = left < 0;
-    final review = viewingToday ? ref.watch(weeklyReviewProvider).value : null;
-    final meals = (ref.watch(mealsProvider).value ?? const <Meal>[])
-        .where((m) => !hidden.contains(m.id))
-        .toList();
+    // Newer servers send meals and the review with Today (one call); `??` only falls back to
+    // the separate requests when they're missing, so those providers aren't even watched.
+    final review = viewingToday
+        ? (data.weeklyReview ?? ref.watch(weeklyReviewProvider).value)
+        : null;
+    final meals =
+        (data.meals ?? ref.watch(mealsProvider).value ?? const <Meal>[])
+            .where((m) => !hidden.contains(m.id))
+            .toList();
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -410,11 +415,13 @@ class _MealCard extends ConsumerWidget {
                       ],
                       if (oily) ...[
                         const SizedBox(width: 6),
-                        Text(
-                          'Oily',
-                          style: AppText.caption.copyWith(
-                            color: AppColors.warn,
-                            fontWeight: FontWeight.w600,
+                        Flexible(
+                          child: Text(
+                            'Oily',
+                            style: AppText.caption.copyWith(
+                              color: AppColors.warn,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ],
@@ -431,8 +438,21 @@ class _MealCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 8),
-            Text(fmtInt(meal.totals.kcal), style: AppText.number),
-            Text(' kcal', style: AppText.caption),
+            // Flexible: at large text sizes "1,032 kcal" wraps instead of pushing off the card.
+            Flexible(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: fmtInt(meal.totals.kcal),
+                      style: AppText.number,
+                    ),
+                    TextSpan(text: ' kcal', style: AppText.caption),
+                  ],
+                ),
+                textAlign: TextAlign.end,
+              ),
+            ),
             IconButton(
               tooltip: 'Meal options',
               icon: const Icon(Icons.more_vert),

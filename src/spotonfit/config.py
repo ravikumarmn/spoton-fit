@@ -108,7 +108,13 @@ class EstimatePolicy(BaseModel):
 class SafetyPolicy(BaseModel):
     """Deterministic safety routing for the coach (PRD C-06). If a message contains one of
     these phrases, the fixed reply is returned and the model is not asked for diet advice.
-    Matching is case-insensitive substring matching; it errs on the side of caution."""
+    Matching is case-insensitive substring matching; it errs on the side of caution.
+    A red-flag match is then confirmed by the small model ("no chest pain" is not a symptom);
+    if that check fails or times out, the fixed reply still goes out. Support matches
+    (self-harm, purging) are never second-guessed."""
+
+    confirm_red_flags: bool = True
+    confirm_timeout_s: float = 6.0
 
     red_flag_terms: list[str] = [
         "chest pain", "chest tightness", "fainted", "fainting", "passed out", "blacked out",

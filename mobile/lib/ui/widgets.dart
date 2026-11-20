@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,17 +68,21 @@ class SectionTitle extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Expanded(
-        child: Semantics(
-          header: true,
-          child: Text(text, style: AppText.section),
-        ),
-      ),
-      ?trailing,
-    ],
-  );
+  Widget build(BuildContext context) {
+    final title = Semantics(
+      header: true,
+      child: Text(text, style: AppText.section),
+    );
+    if (trailing == null) return title;
+    // Wrap: at large text sizes the action moves under the title instead of overflowing.
+    return Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: 12,
+      runSpacing: 4,
+      children: [title, trailing!],
+    );
+  }
 }
 
 // --- Buttons ----------------------------------------------------------------------------
@@ -275,7 +280,9 @@ class QuantityStepper extends StatelessWidget {
   }
 }
 
-class _StepButton extends StatelessWidget {
+/// A − / + button. Holding it repeats (backlog: long-press to repeat), so 12 rotis
+/// don't need 12 taps.
+class _StepButton extends StatefulWidget {
   const _StepButton({
     required this.icon,
     required this.label,
@@ -288,26 +295,65 @@ class _StepButton extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    enabled: enabled,
-    label: label,
-    child: ExcludeSemantics(
-      child: InkResponse(
-        onTap: enabled ? onTap : null,
-        radius: 28,
-        child: SizedBox(
-          width: AppSpace.minTap,
-          height: AppSpace.minTap,
-          child: Icon(
-            icon,
-            size: 22,
-            color: enabled ? AppColors.primary : AppColors.outline,
+  State<_StepButton> createState() => _StepButtonState();
+}
+
+class _StepButtonState extends State<_StepButton> {
+  Timer? _repeat;
+
+  void _start() {
+    _repeat?.cancel();
+    // widget.onTap is read each tick: the parent rebuilds with the new value.
+    _repeat = Timer.periodic(const Duration(milliseconds: 180), (_) {
+      if (widget.enabled) {
+        widget.onTap();
+      } else {
+        _stop();
+      }
+    });
+  }
+
+  void _stop() {
+    _repeat?.cancel();
+    _repeat = null;
+  }
+
+  @override
+  void dispose() {
+    _stop();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final icon = widget.icon;
+    final enabled = widget.enabled;
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: widget.label,
+      child: ExcludeSemantics(
+        child: GestureDetector(
+          onLongPressStart: enabled ? (_) => _start() : null,
+          onLongPressEnd: (_) => _stop(),
+          onLongPressCancel: _stop,
+          child: InkResponse(
+            onTap: enabled ? widget.onTap : null,
+            radius: 28,
+            child: SizedBox(
+              width: AppSpace.minTap,
+              height: AppSpace.minTap,
+              child: Icon(
+                icon,
+                size: 22,
+                color: enabled ? AppColors.primary : AppColors.outline,
+              ),
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 // --- Progress ---------------------------------------------------------------------------

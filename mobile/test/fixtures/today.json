@@ -8,32 +8,170 @@
     "fibre_g": 1.5
   },
   "left": {
-    "kcal": 840.0,
+    "kcal": 660.0,
     "protein_g": 62.0,
-    "carbs_g": 192.0,
-    "fat_g": -14.0,
+    "carbs_g": 158.0,
+    "fat_g": -20.0,
     "water_ml": 2700.0,
     "steps": 3600.0
   },
   "targets": {
     "bmi": 29.1,
     "bmr": 1880.0,
-    "maintenance": 2585.0,
-    "kcal": 2070,
+    "maintenance": 2290.0,
+    "kcal": 1890,
     "kcal_floor": 1880,
     "protein_g": 144,
-    "fat_g": 62,
-    "carbs_g": 233,
-    "fibre_g": 29,
+    "fat_g": 56,
+    "carbs_g": 199,
+    "fibre_g": 26,
     "water_ml": 3200,
     "steps": 7500,
     "kcal_adjustment": 0,
     "steps_adjustment": 0,
-    "maintenance_source": "formula"
+    "maintenance_source": "learned"
   },
   "water_ml": 500,
   "steps": 3900,
   "workout_min": 30.0,
-  "burned_kcal_est": 659.0,
-  "nudges": []
+  "burned_kcal_est": 827.0,
+  "nudges": [],
+  "meals": [
+    {
+      "id": "e9a8a1dd-40b4-47d1-b037-443cf8254643",
+      "eaten_at": "2026-11-19T23:59:42.479517Z",
+      "slot": "breakfast",
+      "note": null,
+      "source": "text",
+      "is_favourite": true,
+      "items": [
+        {
+          "id": "271ac7fa-14f1-44f1-a5c2-abc1cdd53061",
+          "name": "boiled egg",
+          "quantity": 6.0,
+          "unit": "piece",
+          "grams": 300.0,
+          "kcal": 432.0,
+          "protein": 37.8,
+          "carbs": 2.4,
+          "fat": 28.8,
+          "fibre": 0.0,
+          "oil_level": "none",
+          "remark": null,
+          "source": "ai_estimate",
+          "per_unit": {
+            "kcal": 72.0,
+            "protein": 6.3,
+            "carbs": 0.4,
+            "fat": 4.8,
+            "fibre": 0.0
+          }
+        },
+        {
+          "id": "78d9cdba-5aa5-457a-b1ab-a44d976225f6",
+          "name": "puri",
+          "quantity": 3.0,
+          "unit": "piece",
+          "grams": 90.0,
+          "kcal": 330.0,
+          "protein": 6.0,
+          "carbs": 36.0,
+          "fat": 18.0,
+          "fibre": 1.5,
+          "oil_level": "heavy",
+          "remark": "deep-fried, very oily",
+          "source": "ai_estimate",
+          "per_unit": {
+            "kcal": 110.0,
+            "protein": 2.0,
+            "carbs": 12.0,
+            "fat": 6.0,
+            "fibre": 0.5
+          }
+        }
+      ],
+      "totals": {
+        "kcal": 762.0,
+        "protein": 43.8,
+        "carbs": 38.4,
+        "fat": 46.8,
+        "fibre": 1.5
+      }
+    },
+    {
+      "id": "ecf2bc80-53a1-4832-ae0d-9ddb7165c129",
+      "eaten_at": "2026-11-19T23:59:42.512176Z",
+      "slot": "snack",
+      "note": null,
+      "source": "text",
+      "is_favourite": false,
+      "items": [
+        {
+          "id": "dd9282f3-e58f-499a-b046-df4955e1d733",
+          "name": "boiled egg",
+          "quantity": 6.0,
+          "unit": "piece",
+          "grams": 300.0,
+          "kcal": 468.0,
+          "protein": 37.8,
+          "carbs": 2.4,
+          "fat": 28.8,
+          "fibre": 0.0,
+          "oil_level": "none",
+          "remark": null,
+          "source": "edited",
+          "per_unit": {
+            "kcal": 78.0,
+            "protein": 6.3,
+            "carbs": 0.4,
+            "fat": 4.8,
+            "fibre": 0.0
+          }
+        }
+      ],
+      "totals": {
+        "kcal": 468.0,
+        "protein": 37.8,
+        "carbs": 2.4,
+        "fat": 28.8,
+        "fibre": 0.0
+      }
+    }
+  ],
+  "weekly_review": {
+    "review": {
+      "id": "9cf6940d-383e-4a27-b115-b297b77d6f42",
+      "week_start": "2026-11-08",
+      "summary": {
+        "week_start": "2026-11-08",
+        "week_end": "2026-11-14",
+        "days_logged": 7,
+        "avg_kcal": 2070,
+        "avg_protein": 150,
+        "avg_steps": 6000,
+        "on_target_days": 7,
+        "protein_hit_days": 7,
+        "kcal_target": 1890,
+        "protein_target_g": 144,
+        "steps_target": 7000,
+        "trend_start_kg": 92.0,
+        "trend_end_kg": 92.0,
+        "trend_change_kg": 0.0,
+        "waist_change_cm": null,
+        "maintenance_kcal": 2290,
+        "maintenance_source": "learned",
+        "notes": []
+      },
+      "proposal": {
+        "kind": "steps",
+        "delta": 1500,
+        "text": "Add 1,500 steps a day (to 8,500)",
+        "reason": "Your trend hasn't moved for 2 weeks even though you've been consistent."
+      },
+      "decision": null,
+      "decided_at": null
+    },
+    "pending_decision": true,
+    "next_review_on": "2026-11-22"
+  }
 }

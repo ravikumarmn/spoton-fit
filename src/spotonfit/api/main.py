@@ -19,6 +19,7 @@ from spotonfit.agents.checkpoint import open_checkpointer
 from spotonfit.agents.coach import build_coach
 from spotonfit.agents.food_logger import build_food_graph, estimate_text
 from spotonfit.agents.rules_parser import gemini_rule_parser
+from spotonfit.agents.safety import gemini_safety_confirmer
 from spotonfit.agents.suggester import gemini_suggester
 from spotonfit.api.errors import install_error_handlers
 from spotonfit.api.ratelimit import RateLimiter
@@ -65,6 +66,7 @@ def create_app(db: Database | None = None) -> FastAPI:
         parser = gemini_workout_parser()
         suggester = gemini_suggester()
         rule_parser = gemini_rule_parser()
+        safety_confirmer = gemini_safety_confirmer()
         coaches: OrderedDict[object, object] = OrderedDict()
 
         def estimator_for(user_id, sessionmaker):
@@ -92,6 +94,7 @@ def create_app(db: Database | None = None) -> FastAPI:
         app.state.workout_parser = lambda: parser
         app.state.suggester = lambda: suggester
         app.state.rule_parser = lambda: rule_parser
+        app.state.safety_confirmer = lambda: safety_confirmer
         app.state.coach_factory = coach_factory
         try:
             yield

@@ -62,6 +62,11 @@ class MeScreen extends ConsumerWidget {
               ),
               _Row('Food rules', Icons.rule, () => context.push('/me/rules')),
               _Row(
+                'Coach notes',
+                Icons.sticky_note_2_outlined,
+                () => context.push('/me/notes'),
+              ),
+              _Row(
                 'Remembered foods',
                 Icons.bookmark_border,
                 () => context.push('/me/remembered'),
@@ -917,6 +922,93 @@ class _DataScreenState extends ConsumerState<DataScreen> {
         ),
       ],
     ),
+  );
+}
+
+/// Things the coach remembers on every day: diet pattern, allergies, dislikes, schedule.
+class CoachNotesScreen extends ConsumerStatefulWidget {
+  const CoachNotesScreen({super.key});
+  @override
+  ConsumerState<CoachNotesScreen> createState() => _CoachNotesScreenState();
+}
+
+class _CoachNotesScreenState extends ConsumerState<CoachNotesScreen> {
+  final _notes = TextEditingController();
+  bool _loading = true, _busy = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      _notes.text = await ref.read(apiProvider).coachNotes();
+    } on ApiException catch (e) {
+      _error = e.message;
+    }
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  void dispose() {
+    _notes.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      _notes.text = await ref.read(apiProvider).setCoachNotes(_notes.text);
+      if (mounted) {
+        showToast(context, 'Saved. The coach will keep these in mind.');
+      }
+    } on ApiException catch (e) {
+      if (mounted) setState(() => _error = e.message);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SubScaffold(
+    title: 'Coach notes',
+    child: _loading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            children: [
+              Text(
+                'Things your coach should remember every day, for example '
+                '"vegetarian on Tuesdays", "no dairy" or "I train at 6 PM". '
+                'Suggestions follow them too.',
+                style: AppText.body,
+              ),
+              const SizedBox(height: 16),
+              if (_error != null) ...[
+                InfoBanner(_error!, kind: BannerKind.error),
+                const SizedBox(height: 12),
+              ],
+              TextField(
+                controller: _notes,
+                minLines: 4,
+                maxLines: 10,
+                maxLength: 1000,
+                decoration: const InputDecoration(labelText: 'Your notes'),
+              ),
+              const SizedBox(height: 12),
+              PrimaryButton(
+                label: 'Save notes',
+                loading: _busy,
+                onPressed: _save,
+              ),
+            ],
+          ),
   );
 }
 

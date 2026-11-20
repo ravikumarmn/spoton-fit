@@ -63,13 +63,15 @@ jobs:
           service: ${{ vars.CLOUD_RUN_SERVICE }}
           region: ${{ vars.GCP_REGION }}
           image: ${{ env.IMAGE }}
-          # Public API (the app signs users in itself). Scales to zero when idle; at most 2
-          # instances keeps Neon connections well inside the free plan.
+          # Public API (the app signs users in itself). Scales to zero when idle. One instance:
+          # rate limits are counted in memory per process (see api/ratelimit.py); raise this only
+          # after moving them to Postgres or Redis. --concurrency 80 requests per instance.
           flags: >-
             --service-account=${{ vars.RUNTIME_SERVICE_ACCOUNT }}
             --allow-unauthenticated
             --min-instances=0
-            --max-instances=2
+            --max-instances=1
+            --concurrency=80
             --memory=1Gi
             --cpu-boost
             --timeout=300

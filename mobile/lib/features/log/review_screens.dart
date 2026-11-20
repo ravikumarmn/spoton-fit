@@ -60,13 +60,44 @@ class _AnalyzingScreenState extends ConsumerState<AnalyzingScreen> {
           .read(apiProvider)
           .analyze(note: req.note, image: req.image);
       if (!mounted || _cancelled) return;
-      ref
-          .read(draftProvider.notifier)
-          .startFromAnalysis(
-            draft,
-            source: req.image != null ? 'photo' : 'text',
-            note: req.note,
-          );
+      final drafts = ref.read(draftProvider.notifier)
+        ..startFromAnalysis(
+          draft,
+          source: req.image != null ? 'photo' : 'text',
+          note: req.note,
+        );
+      if (draft.allRemembered) {
+        // Nothing to check: save now and offer Undo (backlog: faster logging).
+        final messenger = ScaffoldMessenger.of(context);
+        final api = ref.read(apiProvider);
+        // Read now: this screen is gone by the time Undo is tapped.
+        final version = ref.read(dataVersion.notifier);
+        final meal = await drafts.save();
+        if (!mounted) return;
+        context.go('/today');
+        messenger.hideCurrentSnackBar();
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Logged ${meal.items.map((i) => i.name).join(', ')} · '
+              '${fmtInt(meal.totals.kcal)} kcal (your saved values)',
+            ),
+            duration: const Duration(seconds: 6),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () async {
+                try {
+                  await api.deleteMeal(meal.id);
+                  version.bump();
+                } on ApiException catch (e) {
+                  messenger.showSnackBar(SnackBar(content: Text(e.message)));
+                }
+              },
+            ),
+          ),
+        );
+        return;
+      }
       context.pushReplacement('/log/review');
     } on ApiException catch (e) {
       if (mounted && !_cancelled) setState(() => _error = e);
@@ -348,6 +379,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                         onEdit: () => _editItem(i),
                         onQuantity: (q) =>
                             ref.read(draftProvider.notifier).setQuantity(i, q),
+                        onSize: (f) =>
+                            ref.read(draftProvider.notifier).setSize(i, f),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -435,10 +468,24 @@ class _ItemCard extends StatelessWidget {
     required this.item,
     required this.onEdit,
     required this.onQuantity,
+    required this.onSize,
   });
   final FoodItem item;
   final VoidCallback onEdit;
   final ValueChanged<double> onQuantity;
+  final ValueChanged<double> onSize;
+
+  /// "1 piece ≈ 50 g × 1.4 kcal/g ≈ 72 kcal": how the number was built, so it can be
+  /// sanity-checked (backlog 3.5). Falls back to per-unit values when grams are unknown.
+  String _howEstimated(Nutrients per, bool estimate) {
+    final g = item.gramsPerUnit;
+    if (g != null && g > 0) {
+      final density = per.kcal / g;
+      return '1 ${item.unit} ≈ ${fmtInt(g)} g × ${density.toStringAsFixed(1)} kcal/g '
+          '≈ ${fmtInt(per.kcal)} kcal · ${fmtNum(per.protein)} g protein · $_source';
+    }
+    return '${estimate ? '≈ ' : ''}${fmtInt(per.kcal)} kcal · ${fmtNum(per.protein)} g protein each · $_source';
+  }
 
   String get _source => switch (item.source) {
     'memory' => 'your saved values',
@@ -493,10 +540,7 @@ class _ItemCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      '${estimate ? '≈ ' : ''}${fmtInt(per.kcal)} kcal · ${fmtNum(per.protein)} g protein each · $_source',
-                      style: AppText.caption,
-                    ),
+                    Text(_howEstimated(per, estimate), style: AppText.caption),
                     if (item.remark != null && item.remark!.isNotEmpty)
                       Text(
                         item.remark!,
@@ -512,15 +556,33 @@ class _ItemCard extends StatelessWidget {
               ),
             ],
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: Text(
-                '${fmtInt(total.kcal)} kcal · ${fmtNum(total.protein)} g protein',
-                style: AppText.label,
+          const SizedBox(height: 6),
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
+            children: [
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final (label, factor) in portionSizes)
+                    AppChip(
+                      label: label,
+                      selected: item.sizeFactor == factor,
+                      onTap: () => onSize(factor),
+                    ),
+                ],
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: Text(
+                  '${fmtInt(total.kcal)} kcal · ${fmtNum(total.protein)} g protein',
+                  style: AppText.label,
+                ),
+              ),
+            ],
           ),
         ],
       ),

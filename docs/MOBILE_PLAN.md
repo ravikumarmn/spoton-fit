@@ -92,8 +92,8 @@ An end-to-end test drives the real client against a real server with real Gemini
 
 ### Known test gap (20 Nov 2026)
 
-The widget test "editing a saved meal saves changes to that meal" fails when the test machine's time zone is
-not the server's (e.g. UTC at 03:00 IST, when the server's "today" is a day ahead). CI runs the mobile job in
-`Asia/Kolkata`. The other two tests that failed under UTC were fixed (the test helper scrolled a sideways chip
-row instead of the page). The app behaviour behind it: a phone whose date differs from the server's shows the
-date ("Fri, 20 Nov") instead of "Today".
+CI runs the mobile tests in `Asia/Kolkata`, the server's time zone. Under UTC (just after midnight in India,
+when the server's "today" is a day ahead of the device's), one widget test fails by design: "a meal logged while
+viewing yesterday is saved to yesterday" (the server's yesterday is the device's today). The app shows the date
+("Fri, 20 Nov") instead of "Today" in that window. Fix with per-user time zones (backlog 3.6). The earlier UTC
+failures came from the test helper scrolling the wrong list and are fixed.

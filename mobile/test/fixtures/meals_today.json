@@ -1,14 +1,14 @@
 [
   {
-    "id": "52c6fcce-3dd1-4eba-bd26-1f1180e6d42d",
-    "eaten_at": "2026-11-19T21:50:48.787360Z",
+    "id": "e9a8a1dd-40b4-47d1-b037-443cf8254643",
+    "eaten_at": "2026-11-19T23:59:42.479517Z",
     "slot": "breakfast",
     "note": null,
     "source": "text",
     "is_favourite": true,
     "items": [
       {
-        "id": "f35f96d0-11cb-49b1-bd61-af1a0a961813",
+        "id": "271ac7fa-14f1-44f1-a5c2-abc1cdd53061",
         "name": "boiled egg",
         "quantity": 6.0,
         "unit": "piece",
@@ -30,7 +30,7 @@
         }
       },
       {
-        "id": "7c448df3-0d4f-440e-912e-8a09a9502fdd",
+        "id": "78d9cdba-5aa5-457a-b1ab-a44d976225f6",
         "name": "puri",
         "quantity": 3.0,
         "unit": "piece",
@@ -61,15 +61,15 @@
     }
   },
   {
-    "id": "017f9bbc-7c57-40f7-91c3-19dfad953591",
-    "eaten_at": "2026-11-19T21:50:48.822817Z",
+    "id": "ecf2bc80-53a1-4832-ae0d-9ddb7165c129",
+    "eaten_at": "2026-11-19T23:59:42.512176Z",
     "slot": "snack",
     "note": null,
     "source": "text",
     "is_favourite": false,
     "items": [
       {
-        "id": "70c9166c-75ff-4b52-95a2-bfe760eb4c81",
+        "id": "dd9282f3-e58f-499a-b046-df4955e1d733",
         "name": "boiled egg",
         "quantity": 6.0,
         "unit": "piece",

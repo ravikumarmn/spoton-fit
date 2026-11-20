@@ -89,6 +89,7 @@ class FoodItem {
     this.remark,
     this.source = 'ai_estimate',
     this.confidence,
+    this.sizeFactor = 1,
   });
 
   String name;
@@ -102,6 +103,10 @@ class FoodItem {
   /// ai_estimate | memory | edited | manual
   String source;
   double? confidence;
+
+  /// Portion size picked on the review screen (1 = as estimated). App-only: the saved
+  /// per-unit values already include it.
+  double sizeFactor;
 
   Nutrients get total => perUnit * quantity;
   bool get isOily => oilLevel == 'medium' || oilLevel == 'heavy';
@@ -128,6 +133,7 @@ class FoodItem {
     remark: remark,
     source: source,
     confidence: confidence,
+    sizeFactor: sizeFactor,
   );
 
   /// The body the API's POST /v1/meals expects for one item.
@@ -192,6 +198,15 @@ class Draft {
   final String mealSlot;
   final List<String> oilyItems;
   final List<String> warnings;
+
+  /// Every food is one the user already confirmed (their remembered values) and the model
+  /// raised nothing to check, so the meal can be saved without the review screen.
+  bool get allRemembered =>
+      items.isNotEmpty &&
+      items.every((i) => i.source == 'memory') &&
+      warnings.isEmpty &&
+      oilyItems.isEmpty &&
+      clarify == null;
   final String? clarify;
 
   factory Draft.fromJson(Map<String, dynamic> j) => Draft(
@@ -351,6 +366,8 @@ class Today {
     required this.burnedKcal,
     this.workoutMin = 0,
     this.nudges = const [],
+    this.meals,
+    this.weeklyReview,
   });
 
   final DateTime day;
@@ -360,6 +377,11 @@ class Today {
   final int waterMl, steps;
   final double burnedKcal, workoutMin;
   final List<String> nudges;
+
+  /// The day's meals and (for today) the weekly review, sent with Today so the screen needs
+  /// one call. Null from an older server: the app then fetches them separately.
+  final List<Meal>? meals;
+  final WeeklyReview? weeklyReview;
 
   factory Today.fromJson(Map<String, dynamic> j) {
     final left = _m(j['left']);
@@ -374,6 +396,12 @@ class Today {
       burnedKcal: _d(j['burned_kcal_est']),
       workoutMin: _d(j['workout_min']),
       nudges: ((j['nudges'] as List?) ?? const []).cast<String>(),
+      meals: j['meals'] is List
+          ? (j['meals'] as List).map((m) => Meal.fromJson(_m(m))).toList()
+          : null,
+      weeklyReview: j['weekly_review'] is Map
+          ? WeeklyReview.fromJson(_m(j['weekly_review']))
+          : null,
     );
   }
 }

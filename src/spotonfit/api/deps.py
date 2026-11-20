@@ -34,5 +34,9 @@ def get_rule_parser(request: Request):
     return request.app.state.rule_parser()
 
 
+def get_safety_confirmer(request: Request):
+    return request.app.state.safety_confirmer()
+
+
 def get_coach_factory(request: Request):
     return request.app.state.coach_factory

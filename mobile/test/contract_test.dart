@@ -62,15 +62,20 @@ void main() {
   });
 
   test('today', () {
-    final t = Today.fromJson(fixtureMap('today'));
-    expect(t.targets.kcal, 2070);
+    final raw = fixtureMap('today');
+    final t = Today.fromJson(raw);
+    // Targets can include learned maintenance, which depends on the weekday the fixtures were
+    // generated; check the parse and the arithmetic rather than one fixed number.
+    expect(t.targets.kcal, (raw['targets'] as Map)['kcal']);
     expect(t.targets.kcalFloor, 1880);
     expect(t.eaten.protein, closeTo(81.6, 0.01));
-    expect(t.leftKcal, 840);
+    expect(t.leftKcal, closeTo(t.targets.kcal - t.eaten.kcal, 0.5));
+    expect(t.meals, hasLength(2)); // sent with Today (one call)
+    expect(t.weeklyReview, isNotNull);
     expect(t.leftProteinG, 62);
     expect(t.waterMl, 500);
     expect(t.steps, 3900);
-    expect(t.targets.maintenanceSource, 'formula');
+    expect(t.targets.maintenanceSource, anyOf('formula', 'learned'));
   });
 
   test('profile and warnings', () {

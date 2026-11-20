@@ -263,7 +263,7 @@ public download link **https://storage.googleapis.com/spoton-fit-app-downloads/S
 
 | Piece | Where |
 | --- | --- |
-| API | Cloud Run service `spotonfit-api`, project `spoton-fit-app`, region `asia-southeast1` (Singapore). Scales to zero, max 2 instances. |
+| API | Cloud Run service `spotonfit-api`, project `spoton-fit-app`, region `asia-southeast1` (Singapore). Scales to zero, 1 instance × 1 process (in-memory rate limits). |
 | Database | Neon project `spoton-fit`, `aws-ap-southeast-1`, branch `main` (direct connection; see below). |
 | Secrets | Secret Manager: `spotonfit-jwt-secret`, `spotonfit-google-api-key`, `spotonfit-database-url`. Cloud Run reads them at runtime; they are not in GitHub. |
 | GitHub → Google | Workload Identity Federation (pool `github`, only this repo), service account `spoton-deployer`. No JSON keys. |
@@ -272,7 +272,7 @@ public download link **https://storage.googleapis.com/spoton-fit-app-downloads/S
 
 Notes:
 - **Direct, not pooled, Neon URL.** asyncpg and psycopg use prepared statements, which PgBouncer's
-  transaction pooling can break. Max 2 instances × small pools stays far below Neon's connection limit.
+  transaction pooling can break. One instance with small pools stays far below Neon's connection limit.
 - **Change a secret:** `printf '%s' "$NEW" | gcloud secrets versions add spotonfit-google-api-key --data-file=- --project spoton-fit-app`, then redeploy (re-run the Deploy workflow).
 - **Weekly review job:** deployed as Cloud Run Job `spotonfit-weekly` but not scheduled; reviews are also
   created when a user opens Progress. To schedule it, see the comment at the top of `deploy.yml`.

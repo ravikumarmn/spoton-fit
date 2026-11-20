@@ -37,6 +37,9 @@ def test_meal_water_workout_weight_for_yesterday_count_on_yesterday(client, auth
     t = client.get("/v1/today", headers=auth).json()
     assert y["eaten"]["kcal"] == 300 and y["water_ml"] == 400 and y["workout_min"] > 0
     assert t["eaten"]["kcal"] == 0 and t["water_ml"] == 0 and t["workout_min"] == 0
+    # One call for the Today screen: the day's meals, and the weekly review only for today.
+    assert [m["slot"] for m in y["meals"]] == ["lunch"] and t["meals"] == []
+    assert y["weekly_review"] is None and "pending_decision" in t["weekly_review"]
     meals_y = client.get("/v1/meals", headers=auth, params={"date": yesterday.isoformat()}).json()
     assert [m["slot"] for m in meals_y] == ["lunch"]
     assert client.get("/v1/meals", headers=auth).json() == []

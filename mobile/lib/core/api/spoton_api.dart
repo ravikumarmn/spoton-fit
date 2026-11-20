@@ -72,6 +72,10 @@ abstract interface class SpotOnApi {
   Future<List<MyFood>> myFoods();
   Future<List<MyFood>> saveMyFoods(List<MyFood> foods);
   Future<List<FoodRule>> rules();
+
+  // Coach notes (remembered across days)
+  Future<String> coachNotes();
+  Future<String> setCoachNotes(String notes);
   Future<FoodRule> parseRule(String text);
   Future<FoodRule> saveRule(FoodRule rule);
   Future<void> deleteRule(String id);

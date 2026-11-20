@@ -263,6 +263,9 @@ class TodayOut(BaseModel):
     workout_min: float
     burned_kcal_est: float
     nudges: list[str] = Field(default_factory=list, description="Gentle notes from your food rules")
+    # Everything the Today screen needs in one call (it used to make three).
+    meals: list[MealOut] = Field(default_factory=list, description="The day's meals, oldest first")
+    weekly_review: WeeklyReviewOut | None = Field(None, description="Only when the day is today")
 
 
 class HistoryOut(BaseModel):
@@ -386,6 +389,10 @@ class RuleOut(RuleIn):
     status: str | None = Field(None, description="Today's status in plain words")
 
 
+class CoachNotes(BaseModel):
+    notes: str = Field("", max_length=1000, description="Things the coach should remember across days")
+
+
 class ChatIn(BaseModel):
     message: str = Field(min_length=1, max_length=2000)
     thread_id: str | None = Field(None, max_length=64)
@@ -405,3 +412,6 @@ class ChatMessage(BaseModel):
 class ThreadOut(BaseModel):
     thread_id: str
     messages: list[ChatMessage]
+
+
+TodayOut.model_rebuild()  # resolves the forward reference to WeeklyReviewOut

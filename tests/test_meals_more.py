@@ -109,3 +109,54 @@ def test_export_json_and_csv(client, auth):
     z = client.get("/v1/export", headers=auth, params={"format": "csv"})
     names = set(zipfile.ZipFile(io.BytesIO(z.content)).namelist())
     assert {"meal_items.csv", "water.csv", "weights.csv", "profile.csv", "food_memory.csv"} <= names
+
+
+def test_food_names_match_regardless_of_word_order_and_punctuation():
+    same = ["egg, boiled", "Boiled  Eggs", "boiled egg", "EGGS (boiled)"]
+    assert {food_key(n) for n in same} == {"boiled egg"}
+    assert food_key("dal-rice") == food_key("Rice & Dal")
+    assert food_key("boiled egg") != food_key("fried egg")  # different foods stay different
+
+
+def test_migration_0005_rekeys_and_merges_food_memory(tmp_path):
+    import sqlalchemy as sa
+    from alembic import command
+
+    from spotonfit.migrations.runner import alembic_config
+
+    url = f"sqlite+aiosqlite:///{tmp_path / 'm.db'}"
+    cfg = alembic_config(url)
+    command.upgrade(cfg, "0004")
+    sync = sa.create_engine(f"sqlite:///{tmp_path / 'm.db'}")
+    uid = "0" * 32
+    with sync.begin() as c:
+        c.execute(
+            sa.text(
+                "INSERT INTO users (id, email, password_hash, is_active, created_at, updated_at) "
+                "VALUES (:id, 'm@example.com', 'x', 1, '2026-11-01', '2026-11-01')"
+            ),
+            {"id": uid},
+        )
+        for i, (name, used) in enumerate([("Boiled Eggs", 5), ("egg, boiled", 2), ("Masala Dosa", 1)]):
+            c.execute(
+                sa.text(
+                    "INSERT INTO food_memory (id, user_id, name_key, name, unit, kcal, protein, carbs, fat, fibre, "
+                    "times_used, created_at, updated_at) VALUES (:id, :u, :k, :n, 'piece', 70, 6, 0, 5, 0, :t, "
+                    "'2026-11-01', '2026-11-01')"
+                ),
+                {"id": f"{i:032d}", "u": uid, "k": name.lower(), "n": name, "t": used},
+            )
+    command.upgrade(cfg, "0005")
+    with sync.connect() as c:
+        rows = c.execute(sa.text("SELECT name, name_key, times_used FROM food_memory ORDER BY name")).fetchall()
+    assert [tuple(r) for r in rows] == [("Boiled Eggs", "boiled egg", 7), ("Masala Dosa", "dosa masala", 1)]
+
+
+def test_a_correction_saved_under_one_wording_is_used_for_another(client, auth):
+    # The user corrected "egg, boiled"; the model later says "boiled egg" (the stub's name).
+    draft = client.post("/v1/meals/analyze", headers=auth, data={"note": "eggs"}).json()
+    eggs = draft["items"][0]
+    mine = {**eggs, "name": "egg, boiled", "per_unit": {**eggs["per_unit"], "kcal": 80}, "source": "edited"}
+    save(client, auth, items=[mine])
+    again = client.post("/v1/meals/analyze", headers=auth, data={"note": "6 eggs"}).json()["items"][0]
+    assert again["source"] == "memory" and again["per_unit"]["kcal"] == 80

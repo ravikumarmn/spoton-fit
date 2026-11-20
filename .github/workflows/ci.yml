@@ -60,8 +60,8 @@ jobs:
       ENVIRONMENT: test
       JWT_SECRET: ci-only-not-a-secret
       COACH_MEMORY: memory
-      # Fixtures and widget tests in the server's time zone (SPOTON_TZ). Known gap: one
-      # widget test ("editing a saved meal") still fails under UTC; see docs/MOBILE_PLAN.md.
+      # Fixtures and widget tests in the server's time zone (SPOTON_TZ). One test depends on the
+      # device and server sharing a date; see "Known test gap" in docs/MOBILE_PLAN.md.
       TZ: Asia/Kolkata
     steps:
       - uses: actions/checkout@v4

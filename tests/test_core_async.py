@@ -9,7 +9,7 @@ from spotonfit.agents.schemas import FoodItemEstimate, MealEstimate, NutrientsPe
 from spotonfit.config import EnergyPolicy, settings
 from spotonfit.core.trend import aggregate, estimate_tdee, learned_tdee_from_frame, predict_weight, weight_trend
 from spotonfit.db import Meal, MealItem, ProfileRow, User, WeightLog
-from spotonfit.services.ledger import daily_frame
+from spotonfit.services.ledger import daily_frame, get_profile_row
 from tests.conftest import egg, stub_extractor, stub_suggester
 
 pytestmark = pytest.mark.anyio
@@ -106,6 +106,11 @@ async def test_history_and_coach_tools(db):
     sug = json.loads(await tools["suggest_meal"]())
     assert len(sug["options"]) == 2 and sug["options"][0]["totals"]["kcal"] == 144
     assert "rows" in json.loads(await tools["get_history"]("week", 14))
+    assert json.loads(await tools["get_notes"]()) == {"notes": "(none)"}
+    async with db.sessionmaker() as s:
+        (await get_profile_row(s, uid)).coach_notes = "No dairy"
+        await s.commit()
+    assert json.loads(await tools["get_notes"]()) == {"notes": "No dairy"}
 
 
 def test_trend_tdee_prediction():
