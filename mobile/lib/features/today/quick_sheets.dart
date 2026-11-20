@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/models.dart';
@@ -66,7 +67,7 @@ class _WaterSheetState extends ConsumerState<_WaterSheet> {
           for (final ml in const [250, 500, 750])
             AppChip(
               label: '+$ml ml',
-              icon: Icons.water_drop_outlined,
+              icon: Symbols.water_drop_rounded,
               onTap: () => _add(ml),
             ),
         ],

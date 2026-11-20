@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/models.dart';
@@ -142,7 +143,7 @@ class _ReviewCardState extends ConsumerState<_ReviewCard> {
           return AppCard(
             child: Row(
               children: [
-                Icon(Icons.event_outlined, color: AppColors.text2),
+                Icon(Symbols.event_rounded, color: AppColors.text2),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -187,7 +188,7 @@ class _ReviewCardState extends ConsumerState<_ReviewCard> {
                 const SizedBox(height: 12),
                 InfoBanner(
                   'Suggested: ${p.text}',
-                  icon: Icons.tips_and_updates_outlined,
+                  icon: Symbols.tips_and_updates_rounded,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
@@ -249,7 +250,7 @@ class _WeightCard extends StatelessWidget {
             'Weight',
             trailing: AppChip(
               label: 'Log weight',
-              icon: Icons.add,
+              icon: Symbols.add_rounded,
               onTap: () => showWeightSheet(context),
             ),
           ),
@@ -292,7 +293,7 @@ class _WeightCard extends StatelessWidget {
             InfoBanner(
               p.predictionMessage!,
               kind: BannerKind.soft,
-              icon: Icons.flag_outlined,
+              icon: Symbols.flag_rounded,
             ),
           ] else ...[
             const SizedBox(height: 8),
@@ -374,7 +375,7 @@ class _MaintenanceCard extends StatelessWidget {
             textAlign: TextAlign.end,
           ),
         ),
-        Icon(Icons.chevron_right, color: AppColors.text3),
+        Icon(Symbols.chevron_right_rounded, color: AppColors.text3),
       ],
     ),
   );
@@ -401,7 +402,7 @@ class _MeasurementsCard extends ConsumerWidget {
             'Measurements',
             trailing: AppChip(
               label: 'Add',
-              icon: Icons.add,
+              icon: Symbols.add_rounded,
               onTap: () => _showMeasurementSheet(context),
             ),
           ),
@@ -601,7 +602,7 @@ class _HistoryViewState extends ConsumerState<_HistoryView> {
             if (pts.isEmpty || logged == 0) {
               return const AppCard(
                 child: EmptyState(
-                  icon: Icons.insights_outlined,
+                  icon: Symbols.insights_rounded,
                   message: 'Log a few meals to see your history here.',
                 ),
               );

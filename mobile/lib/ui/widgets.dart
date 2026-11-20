@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../core/api_error.dart';
 import 'format.dart';
@@ -163,12 +164,20 @@ class AppChip extends StatelessWidget {
     this.onTap,
     this.selected = false,
     this.icon,
+    this.iconFill = false,
+    this.trailingIcon,
   });
 
   final String label;
   final VoidCallback? onTap;
   final bool selected;
   final IconData? icon;
+
+  /// A solid icon (e.g. a filled star when something is a favourite).
+  final bool iconFill;
+
+  /// After the label, e.g. a dropdown arrow.
+  final IconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +210,7 @@ class AppChip extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (icon != null) ...[
-                      Icon(icon, size: 18, color: fg),
+                      Icon(icon, size: 18, color: fg, fill: iconFill ? 1 : 0),
                       const SizedBox(width: 6),
                     ],
                     Flexible(
@@ -210,6 +219,10 @@ class AppChip extends StatelessWidget {
                         style: AppText.label.copyWith(color: fg),
                       ),
                     ),
+                    if (trailingIcon != null) ...[
+                      const SizedBox(width: 2),
+                      Icon(trailingIcon, size: 18, color: fg),
+                    ],
                   ],
                 ),
               ),
@@ -251,7 +264,7 @@ class QuantityStepper extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _StepButton(
-            icon: Icons.remove,
+            icon: Symbols.remove_rounded,
             label: 'Less $itemName',
             enabled: value > 0.5,
             onTap: () {
@@ -273,7 +286,7 @@ class QuantityStepper extends StatelessWidget {
             ),
           ),
           _StepButton(
-            icon: Icons.add,
+            icon: Symbols.add_rounded,
             label: 'More $itemName',
             enabled: true,
             onTap: () {
@@ -568,18 +581,22 @@ class InfoBanner extends StatelessWidget {
       BannerKind.warn => (
         AppColors.warnBg,
         AppColors.warn,
-        Icons.error_outline,
+        Symbols.error_rounded,
       ),
-      BannerKind.info => (AppColors.infoBg, AppColors.info, Icons.info_outline),
+      BannerKind.info => (
+        AppColors.infoBg,
+        AppColors.info,
+        Symbols.info_rounded,
+      ),
       BannerKind.soft => (
         AppColors.container,
         AppColors.onContainer,
-        Icons.lightbulb_outline,
+        Symbols.lightbulb_rounded,
       ),
       BannerKind.error => (
         AppColors.errorBg,
         AppColors.error,
-        Icons.error_outline,
+        Symbols.error_rounded,
       ),
     };
     return Container(
@@ -653,7 +670,7 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
     child: EmptyState(
-      icon: Icons.cloud_off_outlined,
+      icon: Symbols.cloud_off_rounded,
       message: errorMessage(error),
       action: onRetry == null
           ? null

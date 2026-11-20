@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/models.dart';
 import '../../core/providers.dart';
@@ -102,7 +103,7 @@ class _Body extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.event_available_outlined,
+                  Symbols.event_available_rounded,
                   color: AppColors.onContainer,
                 ),
                 const SizedBox(width: 12),
@@ -125,14 +126,17 @@ class _Body extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, color: AppColors.onContainer),
+                Icon(
+                  Symbols.chevron_right_rounded,
+                  color: AppColors.onContainer,
+                ),
               ],
             ),
           ),
           const SizedBox(height: 12),
         ],
         for (final n in data.nudges) ...[
-          InfoBanner(n, kind: BannerKind.soft, icon: Icons.rule),
+          InfoBanner(n, kind: BannerKind.soft, icon: Symbols.rule_rounded),
           const SizedBox(height: 12),
         ],
         // The focal point: calories left and protein left, the two numbers that matter.
@@ -235,7 +239,7 @@ class _Body extends ConsumerWidget {
           children: [
             AppChip(
               label: '+250 ml water',
-              icon: Icons.water_drop_outlined,
+              icon: Symbols.water_drop_rounded,
               onTap: () async {
                 Motion.tick();
                 await ref
@@ -250,17 +254,17 @@ class _Body extends ConsumerWidget {
             AppChip(label: 'More water', onTap: () => showWaterSheet(context)),
             AppChip(
               label: 'Steps',
-              icon: Icons.directions_walk,
+              icon: Symbols.directions_walk_rounded,
               onTap: () => showStepsSheet(context, data.steps),
             ),
             AppChip(
               label: 'Weight',
-              icon: Icons.monitor_weight_outlined,
+              icon: Symbols.monitor_weight_rounded,
               onTap: () => showWeightSheet(context),
             ),
             AppChip(
               label: 'Workout',
-              icon: Icons.fitness_center,
+              icon: Symbols.fitness_center_rounded,
               onTap: () => showWorkoutSheet(context),
             ),
           ],
@@ -271,7 +275,7 @@ class _Body extends ConsumerWidget {
         if (meals.isEmpty)
           const AppCard(
             child: EmptyState(
-              icon: Icons.restaurant_outlined,
+              icon: Symbols.restaurant_rounded,
               message: 'Nothing logged yet. Tap + to add a meal.',
             ),
           )
@@ -322,12 +326,12 @@ class _Header extends ConsumerWidget {
         IconButton(
           tooltip: 'Previous day',
           onPressed: () => shift(-1),
-          icon: const Icon(Icons.chevron_left),
+          icon: const Icon(Symbols.chevron_left_rounded),
         ),
         IconButton(
           tooltip: 'Next day',
           onPressed: isToday ? null : () => shift(1),
-          icon: const Icon(Icons.chevron_right),
+          icon: const Icon(Symbols.chevron_right_rounded),
         ),
       ],
     );
@@ -352,7 +356,7 @@ class _MealCard extends ConsumerWidget {
           color: AppColors.errorBg,
           borderRadius: BorderRadius.circular(AppSpace.radiusCard),
         ),
-        child: Icon(Icons.delete_outline, color: AppColors.error),
+        child: Icon(Symbols.delete_rounded, color: AppColors.error),
       ),
       onDismissed: (_) {
         onHide(meal.id);
@@ -378,7 +382,8 @@ class _MealCard extends ConsumerWidget {
                       if (meal.isFavourite) ...[
                         const SizedBox(width: 6),
                         Icon(
-                          Icons.star,
+                          Symbols.star_rounded,
+                          fill: 1,
                           size: 16,
                           color: AppColors.amber,
                           semanticLabel: 'Favourite',
@@ -431,7 +436,7 @@ class _MealCard extends ConsumerWidget {
             ),
             IconButton(
               tooltip: 'Meal options',
-              icon: const Icon(Icons.more_vert),
+              icon: const Icon(Symbols.more_vert_rounded),
               onPressed: () => showMealActions(context, ref, meal),
             ),
           ],

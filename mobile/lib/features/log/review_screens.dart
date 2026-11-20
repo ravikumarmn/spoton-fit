@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/models.dart';
@@ -255,7 +256,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               contentPadding: EdgeInsets.zero,
               title: Text(slotLabel(s), style: AppText.body),
               trailing: s == current
-                  ? Icon(Icons.check, color: AppColors.primary)
+                  ? Icon(Symbols.check_rounded, color: AppColors.primary)
                   : null,
               onTap: () => Navigator.pop(ctx, s),
             ),
@@ -318,7 +319,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         appBar: AppBar(
           leading: IconButton(
             tooltip: 'Close',
-            icon: const Icon(Icons.close),
+            icon: const Icon(Symbols.close_rounded),
             onPressed: _leave,
           ),
           title: Text(editing ? 'Edit meal' : 'Review meal'),
@@ -326,7 +327,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: AppChip(
-                label: '${slotLabel(d.slot)} ▾',
+                label: slotLabel(d.slot),
+                trailingIcon: Symbols.arrow_drop_down_rounded,
                 selected: true,
                 onTap: _pickSlot,
               ),
@@ -344,7 +346,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       InfoBanner(
                         'Saving to ${dayTitle(pastDay, DateTime.now())}, '
                         '${longDate(pastDay)}',
-                        icon: Icons.event_outlined,
+                        icon: Symbols.event_rounded,
                       ),
                       const SizedBox(height: 12),
                     ],
@@ -353,7 +355,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       const SizedBox(height: 12),
                     ],
                     if (d.clarify != null) ...[
-                      InfoBanner(d.clarify!, icon: Icons.help_outline),
+                      InfoBanner(d.clarify!, icon: Symbols.help_rounded),
                       const SizedBox(height: 12),
                     ],
                     for (final w in d.warnings) ...[
@@ -364,14 +366,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       InfoBanner(
                         '${d.oilyItems.join(', ')} looks oily or fried. Check the amounts: photos can miss oil.',
                         kind: BannerKind.warn,
-                        icon: Icons.opacity,
+                        icon: Symbols.opacity_rounded,
                       ),
                       const SizedBox(height: 12),
                     ],
                     if (d.items.isEmpty)
                       const AppCard(
                         child: EmptyState(
-                          icon: Icons.no_food_outlined,
+                          icon: Symbols.no_food_rounded,
                           message: 'No foods yet. Add what you ate below.',
                         ),
                       ),
@@ -391,14 +393,15 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       children: [
                         AppChip(
                           label: 'Add food',
-                          icon: Icons.add,
+                          icon: Symbols.add_rounded,
                           onTap: _addItem,
                         ),
                         AppChip(
                           label: d.favourite
                               ? 'Favourite'
                               : 'Save as favourite',
-                          icon: d.favourite ? Icons.star : Icons.star_outline,
+                          icon: Symbols.star_rounded,
+                          iconFill: d.favourite,
                           selected: d.favourite,
                           onTap: ref
                               .read(draftProvider.notifier)
@@ -408,7 +411,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                           label: (d.note ?? '').isEmpty
                               ? 'Add note'
                               : 'Edit note',
-                          icon: Icons.notes,
+                          icon: Symbols.notes_rounded,
                           onTap: _addNote,
                         ),
                       ],

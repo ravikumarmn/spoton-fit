@@ -37,12 +37,15 @@ void main() {
         '$flutterRoot/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
       ),
     );
-    for (final f in Directory(
-      '${Directory.current.path}/build/symbols_fonts',
-    ).listSync().whereType<File>()) {
-      final name = f.uri.pathSegments.last.split('.').first;
-      await _loadFont(name, _file(f.path));
-    }
+    final pubCache =
+        Platform.environment['PUB_CACHE'] ??
+        '${Platform.environment['HOME']}/.pub-cache';
+    await _loadFont(
+      'packages/material_symbols_icons/MaterialSymbolsRounded',
+      _file(
+        '$pubCache/hosted/pub.dev/material_symbols_icons-4.2960.0/lib/fonts/MaterialSymbolsRounded.ttf',
+      ),
+    );
   });
 
   Future<void> pump(WidgetTester tester, Brightness brightness) async {

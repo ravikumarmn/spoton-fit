@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/models.dart';
@@ -99,8 +100,8 @@ class ChoiceCard extends StatelessWidget {
                 ),
                 Icon(
                   selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
+                      ? Symbols.radio_button_checked_rounded
+                      : Symbols.radio_button_unchecked_rounded,
                   color: selected ? AppColors.primary : AppColors.input,
                 ),
               ],

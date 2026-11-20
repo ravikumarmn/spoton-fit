@@ -15,6 +15,7 @@ import 'package:spoton/features/onboarding/onboarding.dart' show explainPlan;
 import 'package:spoton/features/me/me_screens.dart';
 import 'package:spoton/ui/widgets.dart' show QuantityStepper;
 import 'package:spoton/router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import 'support.dart';
 
@@ -352,7 +353,7 @@ void main() {
       Harness h, {
       String text = '6 boiled eggs and 3 puris',
     }) async {
-      await h.tap(find.byIcon(Icons.add));
+      await h.tap(find.byIcon(Symbols.add_rounded));
       expect(find.text('Log a meal'), findsOneWidget);
       await h.tapText('Type');
       await h.tester.enterText(
@@ -380,7 +381,7 @@ void main() {
         await h.tap(
           find.descendant(
             of: find.byType(QuantityStepper).first,
-            matching: find.byIcon(Icons.add),
+            matching: find.byIcon(Symbols.add_rounded),
           ),
         );
         expect(
@@ -410,7 +411,7 @@ void main() {
       final api = FakeApi();
       final h = Harness(tester, api);
       await h.pump();
-      await h.tap(find.byIcon(Icons.add));
+      await h.tap(find.byIcon(Symbols.add_rounded));
       await h.tapText('Take photo');
       expect(api.lastAnalyzeHadImage, isTrue);
       expect(find.text('Review meal'), findsOneWidget);
@@ -538,7 +539,7 @@ void main() {
       await toReview(h);
       final plus = find.descendant(
         of: find.byType(QuantityStepper).first,
-        matching: find.byIcon(Icons.add),
+        matching: find.byIcon(Symbols.add_rounded),
       );
       final gesture = await tester.startGesture(tester.getCenter(plus));
       // Long press is recognised at 500 ms; then one repeat every 180 ms.
@@ -579,7 +580,7 @@ void main() {
       final api = FakeApi();
       final h = Harness(tester, api);
       await h.pump();
-      await h.tap(find.byIcon(Icons.add));
+      await h.tap(find.byIcon(Symbols.add_rounded));
       await h.tapText('Recent');
       await h.tapText('Log');
       expect(api.calls.where((c) => c.startsWith('repeat')), isNotEmpty);
@@ -621,7 +622,7 @@ void main() {
       final api = FakeApi();
       final h = Harness(tester, api);
       await h.pump();
-      await h.tap(find.byIcon(Icons.add));
+      await h.tap(find.byIcon(Symbols.add_rounded));
       await h.tapText('Type');
       await tester.enterText(
         find.widgetWithText(TextField, 'What did you eat?'),
@@ -940,7 +941,7 @@ void main() {
       final handle = tester.ensureSemantics();
       final h = Harness(tester, FakeApi());
       await h.pump();
-      await h.tap(find.byIcon(Icons.add));
+      await h.tap(find.byIcon(Symbols.add_rounded));
       await h.tapText('Type');
       await tester.enterText(
         find.widgetWithText(TextField, 'What did you eat?'),
@@ -990,7 +991,7 @@ void main() {
         await h.tapText('Me');
         expect(tester.takeException(), isNull);
         await wholePage();
-        await h.tap(find.byIcon(Icons.add));
+        await h.tap(find.byIcon(Symbols.add_rounded));
         expect(tester.takeException(), isNull); // Capture (photo)
         await h.tapText('Type');
         await tester.enterText(

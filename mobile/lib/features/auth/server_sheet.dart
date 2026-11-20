@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/providers.dart';
 import '../../ui/theme.dart';
@@ -78,7 +79,7 @@ class _ServerSheetState extends ConsumerState<_ServerSheet> {
           InfoBanner(
             _result!,
             kind: _ok ? BannerKind.soft : BannerKind.error,
-            icon: _ok ? Icons.check_circle_outline : null,
+            icon: _ok ? Symbols.check_circle_rounded : null,
           ),
         ],
         const SizedBox(height: 16),

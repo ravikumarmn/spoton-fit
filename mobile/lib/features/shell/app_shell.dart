@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../ui/theme.dart';
 
@@ -34,10 +35,10 @@ class _BottomBar extends StatelessWidget {
   final VoidCallback onAdd;
 
   static const _tabs = [
-    (Icons.today_outlined, Icons.today, 'Today'),
-    (Icons.insights_outlined, Icons.insights, 'Progress'),
-    (Icons.forum_outlined, Icons.forum, 'Coach'),
-    (Icons.person_outline, Icons.person, 'Me'),
+    (Symbols.today_rounded, Symbols.today_rounded, 'Today'),
+    (Symbols.insights_rounded, Symbols.insights_rounded, 'Progress'),
+    (Symbols.forum_rounded, Symbols.forum_rounded, 'Coach'),
+    (Symbols.person_rounded, Symbols.person_rounded, 'Me'),
   ];
 
   @override
@@ -62,7 +63,10 @@ class _BottomBar extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      selected ? t.$2 : t.$1,
+                      t.$1,
+                      fill: selected
+                          ? 1
+                          : 0, // the selected tab's icon is solid
                       size: 24,
                       color: selected ? AppColors.primary : AppColors.text3,
                     ),
@@ -125,7 +129,7 @@ class _BottomBar extends StatelessWidget {
                                   width: 56,
                                   height: 56,
                                   child: Icon(
-                                    Icons.add,
+                                    Symbols.add_rounded,
                                     color: AppColors.onPrimary,
                                     size: 30,
                                   ),

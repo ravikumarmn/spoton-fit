@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/models.dart';
@@ -30,7 +31,7 @@ Future<void> showMealActions(BuildContext context, WidgetRef ref, Meal meal) {
           overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 8),
-        _Action(Icons.edit_outlined, 'Edit meal', () {
+        _Action(Symbols.edit_rounded, 'Edit meal', () {
           Navigator.pop(sheet);
           ref
               .read(draftProvider.notifier)
@@ -41,7 +42,7 @@ Future<void> showMealActions(BuildContext context, WidgetRef ref, Meal meal) {
               );
           context.push('/log/review');
         }),
-        _Action(Icons.replay, 'Log again now', () async {
+        _Action(Symbols.replay_rounded, 'Log again now', () async {
           Navigator.pop(sheet);
           await _run(
             context,
@@ -51,7 +52,7 @@ Future<void> showMealActions(BuildContext context, WidgetRef ref, Meal meal) {
           );
         }),
         _Action(
-          meal.isFavourite ? Icons.star : Icons.star_outline,
+          Symbols.star_rounded,
           meal.isFavourite ? 'Remove from favourites' : 'Add to favourites',
           () async {
             Navigator.pop(sheet);
@@ -66,8 +67,9 @@ Future<void> showMealActions(BuildContext context, WidgetRef ref, Meal meal) {
                   : 'Added to favourites',
             );
           },
+          fill: meal.isFavourite,
         ),
-        _Action(Icons.delete_outline, 'Delete meal', () async {
+        _Action(Symbols.delete_rounded, 'Delete meal', () async {
           Navigator.pop(sheet);
           await deleteMealWithUndo(context, ref, meal);
         }, color: AppColors.error),
@@ -138,8 +140,15 @@ Future<void> deleteMealWithUndo(
 }
 
 class _Action extends StatelessWidget {
-  const _Action(this.icon, this.label, this.onTap, {this.color});
+  const _Action(
+    this.icon,
+    this.label,
+    this.onTap, {
+    this.color,
+    this.fill = false,
+  });
   final IconData icon;
+  final bool fill;
   final String label;
   final VoidCallback onTap;
   final Color? color;
@@ -148,7 +157,7 @@ class _Action extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
     minTileHeight: AppSpace.minTap,
     contentPadding: EdgeInsets.zero,
-    leading: Icon(icon, color: color ?? AppColors.text2),
+    leading: Icon(icon, color: color ?? AppColors.text2, fill: fill ? 1 : 0),
     title: Text(
       label,
       style: AppText.body.copyWith(color: color ?? AppColors.text),

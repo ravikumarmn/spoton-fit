@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/models.dart';
 import '../../ui/markdown_text.dart';
@@ -111,7 +112,7 @@ class _CoachScreenState extends ConsumerState<CoachScreen> {
                         ? const CircularProgressIndicator()
                         : SingleChildScrollView(
                             child: EmptyState(
-                              icon: Icons.forum_outlined,
+                              icon: Symbols.forum_rounded,
                               message: c.error ?? 'Ask anything about today, like "Can I have tea now?" or "What should I order at a biryani place?"',
                             ),
                           ),
@@ -151,7 +152,7 @@ class _CoachScreenState extends ConsumerState<CoachScreen> {
                   const SizedBox(width: 8),
                   AppChip(
                     label: 'What should I eat next?',
-                    icon: Icons.restaurant_menu,
+                    icon: Symbols.restaurant_menu_rounded,
                     onTap: () => showSuggestionsSheet(context),
                   ),
                   const SizedBox(width: 8),
@@ -200,7 +201,7 @@ class _CoachScreenState extends ConsumerState<CoachScreen> {
                   onPressed: c.sending || _input.text.trim().isEmpty
                       ? null
                       : _send,
-                  icon: const Icon(Icons.arrow_upward),
+                  icon: const Icon(Symbols.arrow_upward_rounded),
                   style: IconButton.styleFrom(
                     minimumSize: const Size(AppSpace.minTap, AppSpace.minTap),
                   ),
@@ -296,7 +297,7 @@ class _Bubble extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.favorite_border,
+                              Symbols.favorite_rounded,
                               size: 16,
                               color: AppColors.info,
                             ),

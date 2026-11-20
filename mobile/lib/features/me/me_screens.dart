@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/models.dart';
@@ -58,18 +59,22 @@ class MeScreen extends ConsumerWidget {
             children: [
               _Row(
                 'My foods',
-                Icons.restaurant_menu,
+                Symbols.restaurant_menu_rounded,
                 () => context.push('/me/foods'),
               ),
-              _Row('Food rules', Icons.rule, () => context.push('/me/rules')),
+              _Row(
+                'Food rules',
+                Symbols.rule_rounded,
+                () => context.push('/me/rules'),
+              ),
               _Row(
                 'Coach notes',
-                Icons.sticky_note_2_outlined,
+                Symbols.sticky_note_2_rounded,
                 () => context.push('/me/notes'),
               ),
               _Row(
                 'Remembered foods',
-                Icons.bookmark_border,
+                Symbols.bookmark_rounded,
                 () => context.push('/me/remembered'),
               ),
             ],
@@ -79,32 +84,32 @@ class MeScreen extends ConsumerWidget {
             children: [
               _Row(
                 'Export my data',
-                Icons.ios_share,
+                Symbols.ios_share_rounded,
                 () => context.push('/me/data'),
               ),
               _Row(
                 'Appearance',
-                Icons.contrast,
+                Symbols.contrast_rounded,
                 () => showAppearanceSheet(context, ref),
               ),
               _Row(
                 'Change password',
-                Icons.lock_outline,
+                Symbols.lock_rounded,
                 () => context.push('/me/password'),
               ),
               _Row(
                 'Privacy policy',
-                Icons.privacy_tip_outlined,
+                Symbols.privacy_tip_rounded,
                 () => openPrivacyPolicy(context, ref),
               ),
               _Row(
                 'Server address',
-                Icons.dns_outlined,
+                Symbols.dns_rounded,
                 () => showServerSheet(context),
               ),
               _Row(
                 'Delete account',
-                Icons.delete_outline,
+                Symbols.delete_rounded,
                 () => context.push('/me/delete'),
                 color: AppColors.error,
               ),
@@ -167,7 +172,7 @@ class _Row extends StatelessWidget {
       label,
       style: AppText.body.copyWith(color: color ?? AppColors.text),
     ),
-    trailing: Icon(Icons.chevron_right, color: AppColors.text3),
+    trailing: Icon(Symbols.chevron_right_rounded, color: AppColors.text3),
     onTap: onTap,
   );
 }
@@ -288,7 +293,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               InfoBanner(
                 'Saved. Your target is now ${fmtInt(saved.targets.kcal)} kcal and ${saved.targets.proteinG} g protein a day.',
                 kind: BannerKind.soft,
-                icon: Icons.check_circle_outline,
+                icon: Symbols.check_circle_rounded,
               ),
               const SizedBox(height: 12),
             ],
@@ -437,7 +442,7 @@ class MyFoodsScreen extends ConsumerWidget {
             if (list.isEmpty)
               const AppCard(
                 child: EmptyState(
-                  icon: Icons.restaurant_menu,
+                  icon: Symbols.restaurant_menu_rounded,
                   message: 'No foods yet. Add oats, eggs, curd, idli… whatever you really have.',
                 ),
               ),
@@ -452,7 +457,7 @@ class MyFoodsScreen extends ConsumerWidget {
                     color: AppColors.errorBg,
                     borderRadius: BorderRadius.circular(AppSpace.radiusCard),
                   ),
-                  child: Icon(Icons.delete_outline, color: AppColors.error),
+                  child: Icon(Symbols.delete_rounded, color: AppColors.error),
                 ),
                 onDismissed: (_) => _save(context, ref, [...list]..remove(f)),
                 child: AppCard(
@@ -498,7 +503,7 @@ class MyFoodsScreen extends ConsumerWidget {
             const SizedBox(height: 4),
             PrimaryButton(
               label: 'Add food',
-              icon: Icons.add,
+              icon: Symbols.add_rounded,
               onPressed: () async {
                 final created = await _foodSheet(context, null);
                 if (created != null && context.mounted) {
@@ -608,9 +613,13 @@ class RulesScreen extends ConsumerWidget {
   const RulesScreen({super.key});
 
   static (IconData, Color, String) _status(String? state) => switch (state) {
-    'broken' => (Icons.error_outline, AppColors.warn, 'Broken today'),
-    'at_limit' => (Icons.pause_circle_outline, AppColors.amber, 'At the limit'),
-    _ => (Icons.check_circle_outline, AppColors.primary, 'On track'),
+    'broken' => (Symbols.error_rounded, AppColors.warn, 'Broken today'),
+    'at_limit' => (
+      Symbols.pause_circle_rounded,
+      AppColors.amber,
+      'At the limit',
+    ),
+    _ => (Symbols.check_circle_rounded, AppColors.primary, 'On track'),
   };
 
   @override
@@ -633,7 +642,7 @@ class RulesScreen extends ConsumerWidget {
             if (list.isEmpty)
               const AppCard(
                 child: EmptyState(
-                  icon: Icons.rule,
+                  icon: Symbols.rule_rounded,
                   message: 'No rules yet. Try "no tea after 4 PM" or "idli at most 3 days a week".',
                 ),
               ),
@@ -661,7 +670,7 @@ class RulesScreen extends ConsumerWidget {
                         ),
                         IconButton(
                           tooltip: 'Delete rule',
-                          icon: const Icon(Icons.delete_outline),
+                          icon: const Icon(Symbols.delete_rounded),
                           onPressed: () async {
                             if (await confirm(
                               context,
@@ -685,7 +694,7 @@ class RulesScreen extends ConsumerWidget {
             const SizedBox(height: 4),
             PrimaryButton(
               label: 'Add rule',
-              icon: Icons.add,
+              icon: Symbols.add_rounded,
               onPressed: () => showAppSheet<void>(
                 context,
                 builder: (_) => const _RuleSheet(),
@@ -775,7 +784,7 @@ class _RuleSheetState extends ConsumerState<_RuleSheet> {
           InfoBanner(
             'I understood: ${d.summary}',
             kind: BannerKind.soft,
-            icon: Icons.check_circle_outline,
+            icon: Symbols.check_circle_rounded,
           ),
           const SizedBox(height: 16),
           PrimaryButton(
@@ -818,7 +827,7 @@ class RememberedScreen extends ConsumerWidget {
             if (list.isEmpty)
               const AppCard(
                 child: EmptyState(
-                  icon: Icons.bookmark_border,
+                  icon: Symbols.bookmark_rounded,
                   message: 'Nothing yet. Tap a food on the review screen and fix its values to teach SpotOn.',
                 ),
               ),
@@ -923,14 +932,14 @@ class _DataScreenState extends ConsumerState<DataScreen> {
         const SizedBox(height: 16),
         PrimaryButton(
           label: 'Export as JSON',
-          icon: Icons.ios_share,
+          icon: Symbols.ios_share_rounded,
           loading: _busy == 'json',
           onPressed: _busy == null ? () => _export('json') : null,
         ),
         const SizedBox(height: 8),
         SecondaryButton(
           label: 'Export as CSV (zip)',
-          icon: Icons.table_chart_outlined,
+          icon: Symbols.table_chart_rounded,
           onPressed: _busy == null ? () => _export('csv') : null,
         ),
       ],

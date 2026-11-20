@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api/spoton_api.dart';
 import '../../core/api_error.dart';
@@ -64,7 +65,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
       appBar: AppBar(
         leading: IconButton(
           tooltip: 'Close',
-          icon: const Icon(Icons.close),
+          icon: const Icon(Symbols.close_rounded),
           onPressed: () => context.pop(),
         ),
         title: const Text('Log a meal'),
@@ -78,17 +79,17 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
                 ButtonSegment(
                   value: CaptureMode.recent,
                   label: Text('Recent'),
-                  icon: Icon(Icons.history),
+                  icon: Icon(Symbols.history_rounded),
                 ),
                 ButtonSegment(
                   value: CaptureMode.photo,
                   label: Text('Photo'),
-                  icon: Icon(Icons.photo_camera_outlined),
+                  icon: Icon(Symbols.photo_camera_rounded),
                 ),
                 ButtonSegment(
                   value: CaptureMode.type,
                   label: Text('Type'),
-                  icon: Icon(Icons.keyboard_outlined),
+                  icon: Icon(Symbols.keyboard_rounded),
                 ),
               ],
               selected: {_mode},
@@ -115,7 +116,11 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
         padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
         child: Column(
           children: [
-            Icon(Icons.restaurant, size: 40, color: AppColors.onContainer),
+            Icon(
+              Symbols.restaurant_rounded,
+              size: 40,
+              color: AppColors.onContainer,
+            ),
             const SizedBox(height: 12),
             Text(
               'Fit the whole plate in the photo',
@@ -142,13 +147,13 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen> {
       const SizedBox(height: 16),
       PrimaryButton(
         label: 'Take photo',
-        icon: Icons.photo_camera,
+        icon: Symbols.photo_camera_rounded,
         onPressed: () => _pick(camera: true),
       ),
       const SizedBox(height: 8),
       SecondaryButton(
         label: 'Choose from gallery',
-        icon: Icons.photo_library_outlined,
+        icon: Symbols.photo_library_rounded,
         onPressed: () => _pick(camera: false),
       ),
     ],
@@ -205,7 +210,7 @@ class _RecentList extends ConsumerWidget {
         .toList();
     if (favourites.isEmpty && others.isEmpty) {
       return const EmptyState(
-        icon: Icons.history,
+        icon: Symbols.history_rounded,
         message: 'Meals you log show up here, so you can log them again in one tap. Mark a meal ⭐ to keep it at the top.',
       );
     }

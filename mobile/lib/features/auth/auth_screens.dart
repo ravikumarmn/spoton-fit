@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../core/api_error.dart';
 import '../../core/providers.dart';
@@ -283,8 +284,8 @@ class _AuthFormState extends ConsumerState<_AuthForm> {
                       tooltip: _show ? 'Hide password' : 'Show password',
                       icon: Icon(
                         _show
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                            ? Symbols.visibility_off_rounded
+                            : Symbols.visibility_rounded,
                       ),
                       onPressed: () => setState(() => _show = !_show),
                     ),
